@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>楓星升等計算器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1e1e1e;
+    min-height: 100vh;
+    font-family: 'Segoe UI', '微軟正黑體', sans-serif;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  h1 { font-size: 2rem; color: #5dca82; margin-bottom: 4px; text-align: center; }
+  .subtitle { font-size: 0.95rem; color: #556655; text-align: center; margin-bottom: 20px; }
+
+  .layout {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    max-width: 1400px;
+    align-items: stretch;
+  }
+  .card {
+    background: #2a2a2a;
+    border: 1px solid rgba(80,200,120,0.2);
+    border-radius: 16px;
+    padding: 40px;
+    flex: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  }
+  .card-title {
+    font-size: 1.05rem;
+    color: #5ab87a;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #383838;
+  }
+  .section { margin-bottom: 24px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-label {
+    font-size: 0.88rem;
+    color: #5ab87a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .section-label .optional { color: #555; font-size: 0.78rem; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .field { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 0.95rem; color: #aaaaaa; }
+  input[type="number"] {
+    background: #333;
+    border: 1px solid #484848;
+    border-radius: 8px;
+    color: #f0f0f0;
+    padding: 10px 13px;
+    font-size: 1.05rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="number"]:focus { border-color: #4aaa70; box-shadow: 0 0 0 3px rgba(60,160,90,0.15); }
+  input[type="number"]::placeholder { color: #555; }
+  .arrow { font-size: 1.4rem; color: #4a8a60; flex-shrink: 0; margin-top: 22px; }
+
+  /* toggle tabs */
+  .toggle-tabs { display: flex; gap: 0; margin-bottom: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #484848; width: fit-content; }
+  .toggle-tab {
+    background: #333; color: #888; padding: 6px 16px; cursor: pointer;
+    font-size: 0.9rem; border: none; transition: all 0.15s;
+  }
+  .toggle-tab.active { background: #2e7d4a; color: #fff; }
+
+  .mult-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .mult-btn {
+    background: #333; border: 1px solid #484848; border-radius: 6px;
+    color: #ccc; padding: 7px 16px; cursor: pointer; font-size: 1rem; transition: all 0.15s;
+  }
+  .mult-btn:hover { background: #3d3d3d; }
+  .mult-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; box-shadow: 0 2px 8px rgba(46,125,74,0.4); }
+
+  /* Result card */
+  .result-total {
+    background: #333; border: 1px solid rgba(80,200,120,0.2);
+    border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 16px;
+  }
+  .result-total .r-label { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .result-total .r-value { font-size: 1.9rem; font-weight: bold; color: #fff; }
+  .result-total .r-sub { font-size: 0.92rem; color: #666; margin-top: 4px; }
+
+  .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .time-box {
+    background: #333; border: 1px solid rgba(80,200,120,0.15);
+    border-radius: 10px; padding: 18px; text-align: center;
+  }
+  .time-box .r-label { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .time-box .r-main { font-size: 1.3rem; font-weight: bold; color: #fff; margin-bottom: 4px; }
+  .time-box .r-alt { font-size: 0.95rem; color: #888; }
+  .time-box .r-sub { font-size: 0.85rem; color: #555; margin-top: 3px; }
+
+  .divider { border: none; border-top: 1px solid #383838; margin: 16px 0; }
+  .stat-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 0; border-bottom: 1px solid #333; font-size: 1rem;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: #777; }
+  .stat-value { color: #f0f0f0; font-weight: 600; }
+
+  /* coupon box */
+  .info-box {
+    background: #2e3d32; border: 1px solid rgba(80,200,120,0.3);
+    border-radius: 10px; padding: 20px; margin-top: 16px;
+  }
+  .info-box .ib-title { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .info-stat {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid #3a4a3e; font-size: 1rem;
+  }
+  .info-stat:last-child { border-bottom: none; }
+  .info-stat .is-label { color: #888; }
+  .info-stat .is-value { color: #f0f0f0; font-weight: 600; }
+  .info-stat .is-hl { color: #5dca82; font-weight: 700; font-size: 1.1rem; }
+
+  .note { font-size: 0.82rem; color: #444; text-align: center; margin-top: 12px; }
+  .empty { color: #444; font-size: 1rem; }
+
+  @media (max-width: 960px) {
+    .layout { flex-direction: column; }
+    .time-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 500px) {
+    .card { padding: 24px 18px; }
+    .time-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+  <h1>⚔ 楓星升等計算器</h1>
+  <p class="subtitle">MapleStar Leveling Calculator</p>
+
+  <div class="layout">
+    <!-- 左卡：輸入 -->
+    <div class="card">
+      <div class="card-title">輸入設定</div>
+
+      <div class="section">
+        <div class="section-label">等級範圍</div>
+        <div class="row">
+          <div class="field">
+            <label>目前等級</label>
+            <input type="number" id="fromLevel" placeholder="例：126" min="1" max="199">
+          </div>
+          <div class="arrow">→</div>
+          <div class="field">
+            <label>目標等級</label>
+            <input type="number" id="toLevel" placeholder="例：135" min="2" max="200">
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">
+          目前等級進度
+          <span class="optional">（選填）</span>
+        </div>
+        <div class="toggle-tabs" style="margin-bottom:12px">
+          <button class="toggle-tab active" id="tab-pct" onclick="switchProgressTab('pct')">百分比 %</button>
+          <button class="toggle-tab" id="tab-exp" onclick="switchProgressTab('exp')">EXP 數值</button>
+        </div>
+        <div id="progress-pct" class="field">
+          <label>目前已有 % （輸入 0~99.99）</label>
+          <input type="number" id="currentPct" placeholder="例：4.70" min="0" max="99.99" step="0.01">
+        </div>
+        <div id="progress-exp" class="field" style="display:none">
+          <label>目前已有 EXP 數值</label>
+          <input type="number" id="currentExp" placeholder="例：1540592" min="0">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">每分鐘獲得經驗</div>
+        <div class="field">
+          <label>EXP / 分鐘（未加倍）</label>
+          <input type="number" id="expPerMin" placeholder="例：185000" min="1">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">加倍設定</div>
+        <div class="mult-btns">
+          <button class="mult-btn" data-val="1">1x</button>
+          <button class="mult-btn" data-val="1.5">1.5x</button>
+          <button class="mult-btn active" data-val="2">2x</button>
+          <button class="mult-btn" data-val="3">3x</button>
+          <button class="mult-btn" data-val="4">4x</button>
+        </div>
+        <div class="field">
+          <label>自訂倍率</label>
+          <input type="number" id="customMult" value="2" min="1" step="0.5">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">
+          加倍卷排程
+          <span class="optional">（選填）</span>
+        </div>
+        <div class="field">
+          <label>每天打幾小時</label>
+          <input type="number" id="dailyHours" placeholder="例：3" min="0.5" max="24" step="0.5">
+        </div>
+      </div>
+    </div>
+
+    <!-- 右卡：結果 -->
+    <div class="card">
+      <div class="card-title">計算結果</div>
+
+      <div class="result-total">
+        <div class="r-label">剩餘所需經驗值</div>
+        <div class="r-value" id="totalExp"><span class="empty">請輸入等級範圍</span></div>
+        <div class="r-sub" id="levelRange"></div>
+      </div>
+
+      <div class="time-grid">
+        <div class="time-box">
+          <div class="r-label">不加倍 1x</div>
+          <div class="r-main" id="timeNo_dhm"><span class="empty">—</span></div>
+          <div class="r-alt" id="timeNo_h"></div>
+          <div class="r-sub" id="timeNo_min"></div>
+        </div>
+        <div class="time-box">
+          <div class="r-label">加倍後 <span id="multLabel">2x</span></div>
+          <div class="r-main" id="timeMult_dhm"><span class="empty">—</span></div>
+          <div class="r-alt" id="timeMult_h"></div>
+          <div class="r-sub" id="timeMult_min"></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="stat-row">
+        <span class="stat-label">加倍省下時間</span>
+        <span class="stat-value" id="timeSaved">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">不加倍（總分鐘）</span>
+        <span class="stat-value" id="minNo">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">加倍後（總分鐘）</span>
+        <span class="stat-value" id="minMult">—</span>
+      </div>
+
+      <p class="note">※ 官方數值，支援 Lv.1 ~ Lv.200</p>
+
+      <!-- 加倍卷計算 -->
+      <div class="info-box">
+        <div class="ib-title">加倍卷計算（每張 30 分鐘）</div>
+        <div class="info-stat">
+          <span class="is-label">全程加倍需要幾張</span>
+          <span class="is-value is-hl" id="couponsNeeded">—</span>
+        </div>
+        <div class="info-stat" id="scheduleRow1" style="display:none">
+          <span class="is-label">幾天能練完（加倍）</span>
+          <span class="is-value" id="daysWithBoost">—</span>
+        </div>
+        <div class="info-stat" id="scheduleRow2" style="display:none">
+          <span class="is-label">幾天能練完（不加倍）</span>
+          <span class="is-value" id="daysNoBoost">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const EXP_TABLE = [];
+EXP_TABLE[0] = 0; EXP_TABLE[1] = 0;
+const RAW = [
+  [2,15],[3,34],[4,57],[5,92],[6,135],[7,372],[8,560],[9,840],[10,1350],
+  [11,1534],[12,2090],[13,2730],[14,3549],[15,4582],[16,5746],[17,7176],[18,8915],[19,10842],[20,13140],
+  [21,15861],[22,18837],[23,22308],[24,26332],[25,35685],[26,37186],[27,41382],[28,47502],[29,54125],[30,66990],
+  [31,75936],[32,85932],[33,97066],[34,108878],[35,121951],[36,136382],[37,151620],[38,168385],[39,186677],[40,205951],
+  [41,226968],[42,249841],[43,273812],[44,299796],[45,327915],[46,357294],[47,388976],[48,423091],[49,458640],[50,496801],
+  [51,524025],[52,552741],[53,583031],[54,614981],[55,648682],[56,684229],[57,721725],[58,761275],[59,802992],[60,846932],
+  [61,893410],[62,942369],[63,994011],[64,1048482],[65,1105939],[66,1166544],[67,1230029],[68,1297900],[69,1369025],[70,1547193],
+  [71,1631979],[72,1721412],[73,1815744],[74,1915247],[75,2020202],[76,2130909],[77,2247682],[78,2370855],[79,2500777],[80,2638427],
+  [81,2782370],[82,2934845],[83,3095667],[84,3265317],[85,3444255],[86,3633000],[87,3832089],[88,4042086],[89,4263592],[90,4497237],
+  [91,4743685],[92,4963139],[93,5277838],[94,5567064],[95,5872138],[96,6193931],[97,6533358],[98,6891385],[99,7215330],[100,7667376],
+  [101,8087547],[102,8530745],[103,8998230],[104,9491681],[105,10011457],[106,10560084],[107,11138777],[108,11749257],[109,12393036],[110,13072167],
+  [111,13788529],[112,14544140],[113,15341158],[114,16181853],[115,17068619],[116,18003979],[117,18990597],[118,20031281],[119,21128994],[120,23772654],
+  [121,25075395],[122,26449526],[123,27898960],[124,29427822],[125,31040466],[126,32741483],[127,34535716],[128,36428272],[129,38424541],[130,40530206],
+  [131,42751261],[132,45094030],[133,47565183],[134,50171755],[135,52921167],[136,55821246],[137,58880250],[138,62106888],[139,65510344],[140,69100311],
+  [141,72887008],[142,76881216],[143,81094306],[144,85538273],[145,90225770],[146,95170142],[147,100385465],[148,105886588],[149,111689173],[150,125172848],
+  [151,132032320],[152,139267691],[153,146899636],[154,154949656],[155,163440896],[156,172397495],[157,181844837],[158,191809934],[159,202321118],[160,213408315],
+  [161,225103090],[162,245938739],[163,250450381],[164,264175062],[165,278651855],[166,293921976],[167,310020400],[168,327018483],[169,344939096],[170,363841758],
+  [171,383780287],[172,404811446],[173,426995113],[174,450394445],[175,475076060],[176,501101360],[177,528571068],[178,557536762],[179,588089777],[180,656806337],
+  [181,692799324],[182,730764727],[183,770810634],[184,813051056],[185,857606254],[186,904603076],[187,954175324],[188,1006464132],[189,1061618365],[190,1119795051],
+  [191,1181159820],[192,1245887378],[193,1322262006],[194,1386177633],[195,1462140651],[196,1542265949],[197,1626782123],[198,1715929778],[199,1809962734],
+];
+RAW.forEach(([lv, exp]) => { EXP_TABLE[lv] = exp; });
+
+function formatExp(n) {
+  if (n >= 1e12) return (n / 1e12).toFixed(2) + ' 兆';
+  if (n >= 1e8)  return (n / 1e8).toFixed(2) + ' 億';
+  if (n >= 1e4)  return (n / 1e4).toFixed(2) + ' 萬';
+  return n.toLocaleString();
+}
+function formatDHM(minutes) {
+  if (!isFinite(minutes) || minutes <= 0) return null;
+  const m = Math.ceil(minutes);
+  if (m < 60) return m + ' 分鐘';
+  const h = Math.floor(m / 60), rm = m % 60;
+  if (h < 24) return h + ' 小時' + (rm > 0 ? ' ' + rm + ' 分' : '');
+  const d = Math.floor(h / 24), rh = h % 24;
+  return d + ' 天 ' + rh + ' 小時' + (rm > 0 ? ' ' + rm + ' 分' : '');
+}
+function formatHM(minutes) {
+  if (!isFinite(minutes) || minutes <= 0) return null;
+  const m = Math.ceil(minutes);
+  if (m < 60) return m + ' 分鐘';
+  const h = Math.floor(m / 60), rm = m % 60;
+  return h + ' 小時' + (rm > 0 ? ' ' + rm + ' 分' : '');
+}
+function getTotalExp(from, to) {
+  let total = 0;
+  for (let lv = from; lv < to; lv++) total += EXP_TABLE[lv] || 0;
+  return total;
+}
+
+let currentMult = 2;
+let progressTab = 'pct';
+
+function switchProgressTab(tab) {
+  progressTab = tab;
+  document.getElementById('progress-pct').style.display = tab === 'pct' ? '' : 'none';
+  document.getElementById('progress-exp').style.display = tab === 'exp' ? '' : 'none';
+  document.getElementById('tab-pct').classList.toggle('active', tab === 'pct');
+  document.getElementById('tab-exp').classList.toggle('active', tab === 'exp');
+  calculate();
+}
+
+function setText(id, text) { document.getElementById(id).textContent = text; }
+function setHTML(id, html) { document.getElementById(id).innerHTML = html; }
+function showRow(id, show) { document.getElementById(id).style.display = show ? '' : 'none'; }
+
+function calculate() {
+  const fromVal = document.getElementById('fromLevel').value;
+  const toVal   = document.getElementById('toLevel').value;
+  const epmVal  = document.getElementById('expPerMin').value;
+  const from = parseInt(fromVal), to = parseInt(toVal);
+  const epm  = parseFloat(epmVal);
+  const mult = currentMult;
+
+  document.getElementById('multLabel').textContent = mult + 'x';
+
+  if (!fromVal || !toVal || isNaN(from) || isNaN(to)) {
+    setHTML('totalExp', '<span class="empty">請輸入等級範圍</span>');
+    setText('levelRange', '');
+    setHTML('timeNo_dhm', '<span class="empty">—</span>');
+    setText('timeNo_h', ''); setText('timeNo_min', '');
+    setHTML('timeMult_dhm', '<span class="empty">—</span>');
+    setText('timeMult_h', ''); setText('timeMult_min', '');
+    setText('timeSaved', '—'); setText('minNo', '—'); setText('minMult', '—');
+    setText('couponsNeeded', '—');
+    showRow('scheduleRow1', false); showRow('scheduleRow2', false);
+    return;
+  }
+  if (from >= to) {
+    setHTML('totalExp', '<span class="empty">目標等級須大於目前等級</span>');
+    setText('levelRange', '');
+    return;
+  }
+  if (to > 200) {
+    setHTML('totalExp', '<span class="empty">最高支援至 200 等</span>');
+    return;
+  }
+
+  // 計算剩餘經驗（扣掉當前進度）
+  const fullTotal = getTotalExp(from, to);
+  let alreadyExp = 0;
+  const levelExpNeeded = EXP_TABLE[from] || 0;
+
+  if (progressTab === 'pct') {
+    const pctVal = document.getElementById('currentPct').value;
+    const pct = parseFloat(pctVal);
+    if (pctVal && !isNaN(pct) && pct > 0 && pct < 100) {
+      alreadyExp = levelExpNeeded * (pct / 100);
+    }
+  } else {
+    const expVal = document.getElementById('currentExp').value;
+    const expOwned = parseFloat(expVal);
+    if (expVal && !isNaN(expOwned) && expOwned > 0) {
+      alreadyExp = Math.min(expOwned, levelExpNeeded);
+    }
+  }
+
+  const total = fullTotal - alreadyExp;
+  const progressNote = alreadyExp > 0
+    ? `Lv.${from} → Lv.${to}（${to - from} 等，已扣除進度）`
+    : `Lv.${from} → Lv.${to}（${to - from} 等）`;
+
+  setHTML('totalExp', formatExp(total));
+  setText('levelRange', progressNote);
+
+  const hasEpm = epmVal && !isNaN(epm) && epm > 0;
+  if (!hasEpm) {
+    setHTML('timeNo_dhm', '<span class="empty">請輸入 EXP/分</span>');
+    setText('timeNo_h', ''); setText('timeNo_min', '');
+    setHTML('timeMult_dhm', '<span class="empty">請輸入 EXP/分</span>');
+    setText('timeMult_h', ''); setText('timeMult_min', '');
+    setText('timeSaved', '—'); setText('minNo', '—'); setText('minMult', '—');
+    setText('couponsNeeded', '—');
+    showRow('scheduleRow1', false); showRow('scheduleRow2', false);
+    return;
+  }
+
+  const minNo   = total / epm;
+  const minMult = total / (epm * mult);
+  const saved   = minNo - minMult;
+
+  setText('timeNo_dhm', formatDHM(minNo) || '—');
+  const hmNo = formatHM(minNo), dhmNo = formatDHM(minNo);
+  setText('timeNo_h',   hmNo !== dhmNo ? hmNo : '');
+  setText('timeNo_min', Math.ceil(minNo).toLocaleString() + ' 分鐘');
+
+  setText('timeMult_dhm', formatDHM(minMult) || '—');
+  const hmMult = formatHM(minMult), dhmMult = formatDHM(minMult);
+  setText('timeMult_h',   hmMult !== dhmMult ? hmMult : '');
+  setText('timeMult_min', Math.ceil(minMult).toLocaleString() + ' 分鐘');
+
+  setText('timeSaved', formatDHM(saved) || '—');
+  setText('minNo',   Math.ceil(minNo).toLocaleString() + ' 分');
+  setText('minMult', Math.ceil(minMult).toLocaleString() + ' 分');
+
+  // 加倍卷
+  if (mult <= 1) {
+    setText('couponsNeeded', '無需加倍卷');
+  } else {
+    setText('couponsNeeded', Math.ceil(minMult / 30) + ' 張');
+  }
+
+  // 每天排程
+  const dailyVal = document.getElementById('dailyHours').value;
+  const dailyH   = parseFloat(dailyVal);
+  const hasDaily = dailyVal && !isNaN(dailyH) && dailyH > 0;
+
+  showRow('scheduleRow1', hasDaily);
+  showRow('scheduleRow2', hasDaily);
+
+
+  if (hasDaily) {
+    const dailyMin    = dailyH * 60;
+    const daysBoost   = Math.ceil(minMult / dailyMin);
+    const daysNo      = Math.ceil(minNo / dailyMin);
+    const couponsDay  = Math.ceil(dailyMin / 30);
+
+    setText('daysWithBoost', daysBoost + ' 天');
+    setText('daysNoBoost',   daysNo + ' 天');
+  }
+}
+
+document.querySelectorAll('.mult-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentMult = parseFloat(btn.dataset.val);
+    document.getElementById('customMult').value = currentMult;
+    document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    calculate();
+  });
+});
+document.getElementById('customMult').addEventListener('input', e => {
+  currentMult = parseFloat(e.target.value) || 1;
+  document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
+  calculate();
+});
+['fromLevel','toLevel','expPerMin','currentPct','currentExp','dailyHours'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calculate);
+});
+</script>
+</body>
+</html>
