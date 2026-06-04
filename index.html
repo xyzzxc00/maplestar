@@ -57,7 +57,7 @@
   .row { display: flex; gap: 10px; align-items: center; }
   .field { flex: 1; display: flex; flex-direction: column; gap: 6px; }
   label { font-size: 0.95rem; color: #aaaaaa; }
-  input[type="number"] {
+  input[type="number"], input[type="text"] {
     background: #333;
     border: 1px solid #484848;
     border-radius: 8px;
@@ -68,8 +68,8 @@
     outline: none;
     transition: border-color 0.2s;
   }
-  input[type="number"]:focus { border-color: #4aaa70; box-shadow: 0 0 0 3px rgba(60,160,90,0.15); }
-  input[type="number"]::placeholder { color: #555; }
+  input[type="number"]:focus, input[type="text"]:focus { border-color: #4aaa70; box-shadow: 0 0 0 3px rgba(60,160,90,0.15); }
+  input[type="number"]::placeholder, input[type="text"]::placeholder { color: #555; }
   .arrow { font-size: 1.4rem; color: #4a8a60; flex-shrink: 0; margin-top: 22px; }
 
   /* toggle tabs */
@@ -189,10 +189,18 @@
       </div>
 
       <div class="section">
-        <div class="section-label">每分鐘獲得經驗</div>
-        <div class="field">
-          <label>EXP / 分鐘（未加倍）</label>
-          <input type="number" id="expPerMin" placeholder="例：185000" min="1">
+        <div class="section-label">獲得經驗設定</div>
+        <div class="toggle-tabs" style="margin-bottom:12px">
+          <button class="toggle-tab" id="tab-permin" onclick="switchExpTab('permin')">每分鐘</button>
+          <button class="toggle-tab active" id="tab-per10min" onclick="switchExpTab('per10min')">每10分鐘</button>
+        </div>
+        <div id="exp-permin" class="field" style="display:none">
+          <label>EXP / 分鐘（未加倍）　可輸入 W 代替萬，如 18.5W</label>
+          <input type="text" id="expPerMin" placeholder="例：18.5W 或 185000" inputmode="decimal">
+        </div>
+        <div id="exp-per10min" class="field">
+          <label>EXP / 10分鐘（未加倍）　可輸入 W 代替萬，如 185W</label>
+          <input type="text" id="expPer10Min" placeholder="例：185W 或 1850000" inputmode="decimal">
         </div>
       </div>
 
@@ -341,6 +349,27 @@ function getTotalExp(from, to) {
 
 let currentMult = 2;
 let progressTab = 'pct';
+let expTab = 'per10min';
+
+// 解析 EXP 輸入，支援 W（萬）
+function parseExp(val) {
+  if (!val || !val.trim()) return NaN;
+  const s = val.trim().toUpperCase();
+  if (s.endsWith('W')) {
+    const num = parseFloat(s.slice(0, -1));
+    return isNaN(num) ? NaN : num * 10000;
+  }
+  return parseFloat(s);
+}
+
+function switchExpTab(tab) {
+  expTab = tab;
+  document.getElementById('exp-permin').style.display   = tab === 'permin'   ? '' : 'none';
+  document.getElementById('exp-per10min').style.display = tab === 'per10min' ? '' : 'none';
+  document.getElementById('tab-permin').classList.toggle('active', tab === 'permin');
+  document.getElementById('tab-per10min').classList.toggle('active', tab === 'per10min');
+  calculate();
+}
 
 function switchProgressTab(tab) {
   progressTab = tab;
@@ -358,9 +387,18 @@ function showRow(id, show) { document.getElementById(id).style.display = show ? 
 function calculate() {
   const fromVal = document.getElementById('fromLevel').value;
   const toVal   = document.getElementById('toLevel').value;
-  const epmVal  = document.getElementById('expPerMin').value;
   const from = parseInt(fromVal), to = parseInt(toVal);
-  const epm  = parseFloat(epmVal);
+
+  // 讀取 EXP（支援 W）
+  let epm, epmVal;
+  if (expTab === 'permin') {
+    epmVal = document.getElementById('expPerMin').value;
+    epm = parseExp(epmVal);
+  } else {
+    epmVal = document.getElementById('expPer10Min').value;
+    const per10 = parseExp(epmVal);
+    epm = per10 / 10; // 換算成每分鐘
+  }
   const mult = currentMult;
 
   document.getElementById('multLabel').textContent = mult + 'x';
@@ -414,7 +452,7 @@ function calculate() {
   setHTML('totalExp', formatExp(total));
   setText('levelRange', progressNote);
 
-  const hasEpm = epmVal && !isNaN(epm) && epm > 0;
+  const hasEpm = epmVal && epmVal.trim() && !isNaN(epm) && epm > 0;
   if (!hasEpm) {
     setHTML('timeNo_dhm', '<span class="empty">請輸入 EXP/分</span>');
     setText('timeNo_h', ''); setText('timeNo_min', '');
@@ -485,7 +523,7 @@ document.getElementById('customMult').addEventListener('input', e => {
   document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
   calculate();
 });
-['fromLevel','toLevel','expPerMin','currentPct','currentExp','dailyHours'].forEach(id => {
+['fromLevel','toLevel','expPerMin','expPer10Min','currentPct','currentExp','dailyHours'].forEach(id => {
   document.getElementById(id).addEventListener('input', calculate);
 });
 </script>
