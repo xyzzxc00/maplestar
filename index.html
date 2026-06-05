@@ -173,6 +173,92 @@
     border-radius: 10px; border: 1px solid #383838; margin-top: 4px;
   }
 
+  /* Timer */
+  .timer-body { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .timer-presets { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .timer-preset {
+    background: #333; border: 1px solid #484848; border-radius: 8px;
+    color: #ccc; padding: 7px 18px; cursor: pointer; font-size: 0.9rem;
+    transition: all 0.15s;
+  }
+  .timer-preset:hover { background: #3a3a3a; }
+  .timer-preset.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; }
+  .timer-custom-row { display: flex; align-items: center; gap: 8px; }
+  .timer-custom-row input {
+    background: #333; border: 1px solid #484848; border-radius: 8px;
+    color: #f0f0f0; padding: 7px 12px; font-size: 0.95rem; width: 70px;
+    outline: none; text-align: center; -webkit-appearance: none;
+  }
+  .timer-custom-row input:focus { border-color: #4aaa70; }
+  .timer-custom-row label { color: #888; font-size: 0.88rem; }
+  .timer-display-wrap { position: relative; width: 180px; height: 180px; }
+  .timer-ring { transform: rotate(-90deg); }
+  .timer-ring-bg { fill: none; stroke: #333; stroke-width: 10; }
+  .timer-ring-prog { fill: none; stroke: #3aaa66; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+  .timer-ring-prog.warning { stroke: #e8a020; }
+  .timer-ring-prog.danger  { stroke: #cc4444; }
+  .timer-display {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .timer-time { font-size: 2.4rem; font-weight: 700; color: #fff; letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+  .timer-time.warning { color: #e8a020; }
+  .timer-time.danger  { color: #cc4444; }
+  .timer-label { font-size: 0.75rem; color: #555; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+  .timer-controls { display: flex; gap: 10px; }
+  .timer-btn {
+    border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem;
+    padding: 10px 28px; transition: all 0.15s; font-weight: 600;
+  }
+  .timer-btn-start  { background: #2e7d4a; color: #fff; }
+  .timer-btn-start:hover  { background: #3a9a5c; }
+  .timer-btn-pause  { background: #5a5a2a; color: #e8e060; }
+  .timer-btn-pause:hover  { background: #707030; }
+  .timer-btn-reset  { background: #333; color: #888; border: 1px solid #484848; }
+  .timer-btn-reset:hover  { background: #3a3a3a; color: #bbb; }
+  .timer-done-flash { animation: flash 0.6s ease-in-out 5; }
+  @keyframes flash { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* Timer layout */
+  .timer-layout {
+    display: flex; gap: 32px; align-items: flex-start;
+  }
+  .timer-panel { flex-shrink: 0; }
+  .timer-sep {
+    width: 1px; background: #383838; align-self: stretch; flex-shrink: 0;
+  }
+
+  /* EXP tracker */
+  .exp-tracker { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .exp-tracker-fields { display: flex; flex-direction: column; gap: 12px; }
+  .exp-rate-box {
+    background: #2e3a32; border: 1px solid rgba(80,200,120,0.2);
+    border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 0;
+  }
+  .exp-rate-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 0; border-bottom: 1px solid #3a4a3e; font-size: 0.95rem;
+  }
+  .exp-rate-row:last-of-type { border-bottom: none; }
+  .exp-rate-row span:first-child { color: #888; }
+  .exp-rate-row span:last-child { color: #f0f0f0; font-weight: 600; }
+  .exp-rate-hl { color: #5dca82 !important; font-size: 1.05rem; }
+  .exp-apply-btn {
+    margin-top: 14px; width: 100%; background: #2e7d4a; border: none;
+    border-radius: 8px; color: #fff; padding: 10px; cursor: pointer;
+    font-size: 0.92rem; font-weight: 600; transition: background 0.15s;
+  }
+  .exp-apply-btn:hover { background: #3a9a5c; }
+  .exp-rate-hint { color: #555; font-size: 0.85rem; }
+
+  @media (max-width: 700px) {
+    .timer-layout { flex-direction: column; gap: 20px; }
+    .timer-sep { width: 100%; height: 1px; }
+    .timer-panel { width: 100%; }
+    .timer-body { align-items: stretch; }
+    .timer-display-wrap { align-self: center; }
+  }
+
   /* History */
   .history-empty { color: #555; font-size: 0.95rem; text-align: center; padding: 16px 0; }
   .history-list { display: flex; flex-direction: column; gap: 8px; }
@@ -376,6 +462,85 @@
           <span class="is-value" id="daysNoBoost">—</span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 倒數計時器 + EXP 測速 -->
+  <div class="full-card">
+    <div class="card-title">倒數計時器 &amp; EXP 測速</div>
+    <div class="timer-layout">
+
+      <!-- 左：計時器 -->
+      <div class="timer-panel">
+        <div class="timer-body">
+          <div class="timer-presets">
+            <button class="timer-preset active" data-min="1" onclick="timerSetPreset(1, this)">1 分鐘</button>
+            <button class="timer-preset" data-min="5" onclick="timerSetPreset(5, this)">5 分鐘</button>
+            <button class="timer-preset" data-min="10" onclick="timerSetPreset(10, this)">10 分鐘</button>
+            <div class="timer-custom-row">
+              <input type="number" id="timerCustomMin" placeholder="分" min="1" max="999" oninput="timerSetCustom()">
+              <label>分鐘</label>
+            </div>
+          </div>
+
+          <div class="timer-display-wrap">
+            <svg class="timer-ring" width="180" height="180" viewBox="0 0 180 180">
+              <circle class="timer-ring-bg"   cx="90" cy="90" r="80"/>
+              <circle class="timer-ring-prog" id="timerRing" cx="90" cy="90" r="80"
+                stroke-dasharray="502.65" stroke-dashoffset="0"/>
+            </svg>
+            <div class="timer-display">
+              <div class="timer-time" id="timerDisplay">01:00</div>
+              <div class="timer-label" id="timerLabel">準備開始</div>
+            </div>
+          </div>
+
+          <div class="timer-controls">
+            <button class="timer-btn timer-btn-start" id="timerStartBtn" onclick="timerToggle()">開始</button>
+            <button class="timer-btn timer-btn-reset" onclick="timerReset()">重置</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分隔線 -->
+      <div class="timer-sep"></div>
+
+      <!-- 右：EXP 測速 -->
+      <div class="exp-tracker">
+        <div class="section-label">EXP 測速</div>
+        <div class="exp-tracker-fields">
+          <div class="field">
+            <label>測試前經驗值</label>
+            <input type="text" id="expBefore" placeholder="例：185W 或 1850000" inputmode="decimal" oninput="calcExpRate()">
+          </div>
+          <div class="field">
+            <label>測試後經驗值</label>
+            <input type="text" id="expAfter" placeholder="例：200W 或 2000000" inputmode="decimal" oninput="calcExpRate()">
+          </div>
+        </div>
+
+        <div class="exp-rate-box" id="expRateBox" style="display:none">
+          <div class="exp-rate-row">
+            <span>獲得經驗</span>
+            <span id="expGained" class="exp-rate-hl">—</span>
+          </div>
+          <div class="exp-rate-row">
+            <span>測試時長</span>
+            <span id="expDuration">—</span>
+          </div>
+          <div class="exp-rate-row">
+            <span>EXP / 分鐘</span>
+            <span id="expPerMinResult">—</span>
+          </div>
+          <div class="exp-rate-row">
+            <span>EXP / 10分鐘</span>
+            <span id="expPer10MinResult">—</span>
+          </div>
+          <button class="exp-apply-btn" onclick="applyExpRate()">↑ 套用到計算機</button>
+        </div>
+        <div class="exp-rate-hint" id="expRateHint">輸入前後經驗後自動計算速率</div>
+      </div>
+
     </div>
   </div>
 
@@ -761,6 +926,167 @@ document.getElementById('customMult').addEventListener('input', e => {
 ['fromLevel','toLevel','expPerMin','expPer10Min','currentPct','currentExp','dailyHours'].forEach(id => {
   document.getElementById(id).addEventListener('input', calculate);
 });
+
+// === TIMER ===
+const CIRC = 2 * Math.PI * 80; // 502.65
+let timerTotal   = 1 * 60;
+let timerLeft    = 1 * 60;
+let timerRunning = false;
+let timerInterval = null;
+
+function timerSetPreset(min, btn) {
+  if (timerRunning) return;
+  document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('timerCustomMin').value = '';
+  timerTotal = min * 60;
+  timerLeft  = timerTotal;
+  timerRenderStatic();
+}
+
+function timerSetCustom() {
+  if (timerRunning) return;
+  const val = parseInt(document.getElementById('timerCustomMin').value);
+  document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
+  if (!val || val < 1) return;
+  timerTotal = val * 60;
+  timerLeft  = timerTotal;
+  timerRenderStatic();
+}
+
+function timerToggle() {
+  if (timerRunning) {
+    timerRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('timerStartBtn').textContent = '繼續';
+    document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-start';
+    document.getElementById('timerLabel').textContent = '已暫停';
+  } else {
+    if (timerLeft <= 0) timerLeft = timerTotal;
+    timerRunning = true;
+    document.getElementById('timerStartBtn').textContent = '暫停';
+    document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-pause';
+    timerInterval = setInterval(timerTick, 1000);
+  }
+}
+
+function timerTick() {
+  timerLeft--;
+  timerElapsed++;
+  timerRenderStatic();
+  calcExpRate();
+  if (timerLeft <= 0) {
+    timerRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('timerStartBtn').textContent = '重新開始';
+    document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-start';
+    document.getElementById('timerLabel').textContent = '時間到！';
+    document.getElementById('timerDisplay').classList.add('timer-done-flash');
+    timerBeep();
+    if (Notification.permission === 'granted') {
+      new Notification('楓星計算器', { body: '倒數結束！加倍卷時間到囉', icon: '' });
+    }
+  }
+}
+
+function timerReset() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  timerLeft    = timerTotal;
+  timerElapsed = 0;
+  document.getElementById('timerStartBtn').textContent = '開始';
+  document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-start';
+  document.getElementById('timerDisplay').classList.remove('timer-done-flash');
+  timerRenderStatic();
+}
+
+function timerRenderStatic() {
+  const m = Math.floor(timerLeft / 60);
+  const s = timerLeft % 60;
+  const display = document.getElementById('timerDisplay');
+  const ring    = document.getElementById('timerRing');
+  const label   = document.getElementById('timerLabel');
+
+  display.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  display.classList.remove('timer-done-flash');
+
+  const ratio = timerTotal > 0 ? timerLeft / timerTotal : 1;
+  ring.style.strokeDashoffset = CIRC * (1 - ratio);
+
+  const pct = ratio * 100;
+  display.className = 'timer-time' + (pct <= 10 ? ' danger' : pct <= 25 ? ' warning' : '');
+  ring.className    = 'timer-ring-prog' + (pct <= 10 ? ' danger' : pct <= 25 ? ' warning' : '');
+
+  if (timerLeft > 0 && !timerRunning) label.textContent = '準備開始';
+  else if (timerRunning) label.textContent = '計時中';
+}
+
+function timerBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.3, 0.6].forEach(offset => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.25);
+      osc.start(ctx.currentTime + offset);
+      osc.stop(ctx.currentTime + offset + 0.25);
+    });
+  } catch {}
+}
+
+// === EXP TRACKER ===
+let timerElapsed = 0; // 累積已跑秒數
+
+function calcExpRate() {
+  const before = parseExpVal(document.getElementById('expBefore').value);
+  const after  = parseExpVal(document.getElementById('expAfter').value);
+  const box    = document.getElementById('expRateBox');
+  const hint   = document.getElementById('expRateHint');
+
+  if (isNaN(before) || isNaN(after) || after <= before) {
+    box.style.display  = 'none';
+    hint.style.display = '';
+    return;
+  }
+
+  const gained = after - before;
+  const secs   = timerElapsed > 0 ? timerElapsed : timerTotal;
+  const mins   = secs / 60;
+
+  document.getElementById('expGained').textContent      = formatExp(gained);
+  document.getElementById('expDuration').textContent    = formatDHM(mins) || (mins.toFixed(1) + ' 分鐘');
+  document.getElementById('expPerMinResult').textContent   = formatExp(Math.round(gained / mins));
+  document.getElementById('expPer10MinResult').textContent = formatExp(Math.round(gained / mins * 10));
+
+  box.style.display  = '';
+  hint.style.display = 'none';
+}
+
+function applyExpRate() {
+  const before = parseExpVal(document.getElementById('expBefore').value);
+  const after  = parseExpVal(document.getElementById('expAfter').value);
+  if (isNaN(before) || isNaN(after) || after <= before) return;
+  const gained = after - before;
+  const secs   = timerElapsed > 0 ? timerElapsed : timerTotal;
+  const per10  = Math.round(gained / secs * 60 * 10);
+
+  // 切換到每10分鐘頁籤並填入
+  switchExpTab('per10min');
+  document.getElementById('expPer10Min').value = per10;
+  calculate();
+
+  const btn = document.querySelector('.exp-apply-btn');
+  btn.textContent = '✓ 已套用！';
+  setTimeout(() => { btn.textContent = '↑ 套用到計算機'; }, 2000);
+}
+
+// 請求通知權限
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
 
 // === INIT ===
 loadFromURL();
