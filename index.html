@@ -14,103 +14,118 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 24px;
+    padding: 20px 16px;
+    gap: 16px;
   }
-  h1 { font-size: 2rem; color: #5dca82; margin-bottom: 4px; text-align: center; }
-  .subtitle { font-size: 0.95rem; color: #556655; text-align: center; margin-bottom: 20px; }
+  h1 { font-size: 2rem; color: #5dca82; margin-bottom: 2px; text-align: center; }
+  .subtitle { font-size: 0.95rem; color: #556655; text-align: center; }
 
   .layout {
     display: flex;
-    gap: 24px;
+    gap: 16px;
     width: 100%;
-    max-width: 1400px;
-    align-items: stretch;
+    max-width: 1200px;
+    align-items: flex-start;
   }
   .card {
     background: #2a2a2a;
     border: 1px solid rgba(80,200,120,0.2);
     border-radius: 16px;
-    padding: 40px;
+    padding: 28px;
     flex: 1;
     box-shadow: 0 4px 20px rgba(0,0,0,0.35);
   }
+  .full-card {
+    background: #2a2a2a;
+    border: 1px solid rgba(80,200,120,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    width: 100%;
+    max-width: 1200px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  }
   .card-title {
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: #5ab87a;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     padding-bottom: 12px;
     border-bottom: 1px solid #383838;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
   }
-  .section { margin-bottom: 24px; }
+  .section { margin-bottom: 20px; }
   .section:last-child { margin-bottom: 0; }
   .section-label {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     color: #5ab87a;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
-  .section-label .optional { color: #555; font-size: 0.78rem; text-transform: none; letter-spacing: 0; margin-left: 6px; }
-  .row { display: flex; gap: 10px; align-items: center; }
-  .field { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-  label { font-size: 0.95rem; color: #aaaaaa; }
+  .section-label .optional { color: #555; font-size: 0.75rem; text-transform: none; letter-spacing: 0; margin-left: 5px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  label { font-size: 0.88rem; color: #aaaaaa; }
   input[type="number"], input[type="text"] {
     background: #333;
     border: 1px solid #484848;
     border-radius: 8px;
     color: #f0f0f0;
-    padding: 10px 13px;
-    font-size: 1.05rem;
+    padding: 10px 12px;
+    font-size: 1rem;
     width: 100%;
     outline: none;
     transition: border-color 0.2s;
+    -webkit-appearance: none;
   }
   input[type="number"]:focus, input[type="text"]:focus { border-color: #4aaa70; box-shadow: 0 0 0 3px rgba(60,160,90,0.15); }
   input[type="number"]::placeholder, input[type="text"]::placeholder { color: #555; }
-  .arrow { font-size: 1.4rem; color: #4a8a60; flex-shrink: 0; margin-top: 22px; }
+  .arrow { font-size: 1.3rem; color: #4a8a60; flex-shrink: 0; margin-top: 20px; }
 
   /* toggle tabs */
-  .toggle-tabs { display: flex; gap: 0; margin-bottom: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #484848; width: fit-content; }
+  .toggle-tabs { display: flex; margin-bottom: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #484848; width: fit-content; }
   .toggle-tab {
-    background: #333; color: #888; padding: 6px 16px; cursor: pointer;
-    font-size: 0.9rem; border: none; transition: all 0.15s;
+    background: #333; color: #888; padding: 7px 16px; cursor: pointer;
+    font-size: 0.88rem; border: none; transition: all 0.15s;
   }
   .toggle-tab.active { background: #2e7d4a; color: #fff; }
 
-  .mult-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .mult-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
   .mult-btn {
     background: #333; border: 1px solid #484848; border-radius: 6px;
-    color: #ccc; padding: 7px 16px; cursor: pointer; font-size: 1rem; transition: all 0.15s;
+    color: #ccc; padding: 8px 14px; cursor: pointer; font-size: 0.95rem; transition: all 0.15s;
+    flex: 1; min-width: 48px; text-align: center;
   }
   .mult-btn:hover { background: #3d3d3d; }
-  .mult-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; box-shadow: 0 2px 8px rgba(46,125,74,0.4); }
+  .mult-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; box-shadow: 0 2px 8px rgba(46,125,74,0.3); }
 
   /* Result card */
   .result-total {
     background: #333; border: 1px solid rgba(80,200,120,0.2);
-    border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 16px;
+    border-radius: 10px; padding: 18px; text-align: center; margin-bottom: 14px;
   }
-  .result-total .r-label { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .result-total .r-value { font-size: 1.9rem; font-weight: bold; color: #fff; }
-  .result-total .r-sub { font-size: 0.92rem; color: #666; margin-top: 4px; }
+  .result-total .r-label { font-size: 0.82rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .result-total .r-value { font-size: 1.8rem; font-weight: bold; color: #fff; }
+  .result-total .r-sub { font-size: 0.88rem; color: #666; margin-top: 3px; }
 
-  .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .time-box {
     background: #333; border: 1px solid rgba(80,200,120,0.15);
-    border-radius: 10px; padding: 18px; text-align: center;
+    border-radius: 10px; padding: 16px 12px; text-align: center;
   }
-  .time-box .r-label { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .time-box .r-main { font-size: 1.3rem; font-weight: bold; color: #fff; margin-bottom: 4px; }
-  .time-box .r-alt { font-size: 0.95rem; color: #888; }
-  .time-box .r-sub { font-size: 0.85rem; color: #555; margin-top: 3px; }
+  .time-box .r-label { font-size: 0.78rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+  .time-box .r-main { font-size: 1.2rem; font-weight: bold; color: #fff; margin-bottom: 3px; }
+  .time-box .r-alt { font-size: 0.88rem; color: #888; }
+  .time-box .r-sub { font-size: 0.8rem; color: #555; margin-top: 2px; }
 
-  .divider { border: none; border-top: 1px solid #383838; margin: 16px 0; }
+  .divider { border: none; border-top: 1px solid #383838; margin: 14px 0; }
   .stat-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 9px 0; border-bottom: 1px solid #333; font-size: 1rem;
+    padding: 8px 0; border-bottom: 1px solid #2e2e2e; font-size: 0.95rem;
   }
   .stat-row:last-child { border-bottom: none; }
   .stat-label { color: #777; }
@@ -119,29 +134,99 @@
   /* coupon box */
   .info-box {
     background: #2e3d32; border: 1px solid rgba(80,200,120,0.3);
-    border-radius: 10px; padding: 20px; margin-top: 16px;
+    border-radius: 10px; padding: 18px; margin-top: 14px;
   }
-  .info-box .ib-title { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .info-box .ib-title { font-size: 0.82rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
   .info-stat {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0; border-bottom: 1px solid #3a4a3e; font-size: 1rem;
+    padding: 7px 0; border-bottom: 1px solid #3a4a3e; font-size: 0.95rem;
   }
   .info-stat:last-child { border-bottom: none; }
   .info-stat .is-label { color: #888; }
   .info-stat .is-value { color: #f0f0f0; font-weight: 600; }
-  .info-stat .is-hl { color: #5dca82; font-weight: 700; font-size: 1.1rem; }
+  .info-stat .is-hl { color: #5dca82; font-weight: 700; font-size: 1.05rem; }
 
-  .note { font-size: 0.82rem; color: #444; text-align: center; margin-top: 12px; }
+  /* Share button */
+  .share-btn {
+    background: #2e3d32; border: 1px solid rgba(80,200,120,0.4);
+    border-radius: 8px; color: #5ab87a; padding: 7px 14px;
+    cursor: pointer; font-size: 0.82rem; display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .share-btn:hover { background: #344a3a; border-color: rgba(80,200,120,0.7); }
+  .share-btn.copied { background: #2a4a2a; border-color: #5dca82; color: #5dca82; }
+
+  /* Breakdown table */
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .breakdown-table th {
+    background: #303030; color: #5ab87a; padding: 9px 14px;
+    text-align: left; font-weight: 600; position: sticky; top: 0;
+    border-bottom: 1px solid #484848; z-index: 1;
+  }
+  .breakdown-table td { padding: 7px 14px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+  .breakdown-table tr:last-child td { border-bottom: none; }
+  .breakdown-table tbody tr:hover td { background: #2e2e2e; }
+  .breakdown-table td:first-child { color: #777; }
+  .breakdown-table td.hl { color: #5dca82; font-weight: 600; }
+  .breakdown-wrap {
+    overflow-x: auto; overflow-y: auto; max-height: 360px;
+    border-radius: 10px; border: 1px solid #383838; margin-top: 4px;
+  }
+
+  /* History */
+  .history-empty { color: #555; font-size: 0.95rem; text-align: center; padding: 16px 0; }
+  .history-list { display: flex; flex-direction: column; gap: 8px; }
+  .history-item {
+    background: #333; border: 1px solid #3a3a3a; border-radius: 10px;
+    padding: 12px 16px; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .history-item:hover { background: #383838; border-color: rgba(80,200,120,0.3); }
+  .hi-meta { flex: 1; min-width: 0; }
+  .hi-range { font-size: 0.95rem; color: #f0f0f0; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hi-detail { font-size: 0.82rem; color: #777; }
+  .hi-time { text-align: right; flex-shrink: 0; }
+  .hi-result { font-size: 0.95rem; color: #5dca82; font-weight: 700; }
+  .hi-ts { font-size: 0.75rem; color: #555; margin-top: 1px; }
+  .hi-del {
+    background: none; border: none; color: #554040; cursor: pointer;
+    font-size: 1rem; padding: 5px 8px; border-radius: 4px;
+    transition: color 0.15s; flex-shrink: 0;
+  }
+  .hi-del:hover { color: #cc4444; }
+  .history-clear {
+    background: none; border: 1px solid #484848; border-radius: 6px;
+    color: #666; padding: 5px 13px; cursor: pointer; font-size: 0.82rem;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .history-clear:hover { color: #cc4444; border-color: #664444; }
+
+  .note { font-size: 0.78rem; color: #444; text-align: center; margin-top: 10px; }
   .empty { color: #444; font-size: 1rem; }
 
-  @media (max-width: 960px) {
-    .layout { flex-direction: column; }
-    .time-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 500px) {
-    .card { padding: 24px 18px; }
-    .time-grid { grid-template-columns: 1fr; }
+  /* ── Mobile ── */
+  @media (max-width: 760px) {
+    body { padding: 14px 12px; gap: 12px; }
     h1 { font-size: 1.5rem; }
+    .layout { flex-direction: column; gap: 12px; }
+    .card { padding: 20px 16px; width: 100%; }
+    .full-card { padding: 20px 16px; }
+    .card-title { font-size: 0.88rem; flex-wrap: wrap; }
+    .result-total .r-value { font-size: 1.5rem; }
+    .time-box .r-main { font-size: 1.05rem; }
+    .stat-row { font-size: 0.88rem; }
+    .info-stat { font-size: 0.88rem; }
+    .breakdown-table th, .breakdown-table td { padding: 7px 10px; font-size: 0.82rem; }
+    .history-item { padding: 10px 12px; gap: 8px; }
+    .hi-range { font-size: 0.88rem; }
+    .hi-result { font-size: 0.88rem; }
+    .mult-btn { padding: 8px 10px; font-size: 0.9rem; }
+    input[type="number"], input[type="text"] { font-size: 0.95rem; padding: 9px 11px; }
+    label { font-size: 0.82rem; }
+  }
+  @media (max-width: 400px) {
+    .time-grid { grid-template-columns: 1fr; }
+    .share-btn span { display: none; }
   }
 </style>
 </head>
@@ -174,12 +259,12 @@
           目前等級進度
           <span class="optional">（選填）</span>
         </div>
-        <div class="toggle-tabs" style="margin-bottom:12px">
+        <div class="toggle-tabs">
           <button class="toggle-tab active" id="tab-pct" onclick="switchProgressTab('pct')">百分比 %</button>
           <button class="toggle-tab" id="tab-exp" onclick="switchProgressTab('exp')">EXP 數值</button>
         </div>
         <div id="progress-pct" class="field">
-          <label>目前已有 % （輸入 0~99.99）</label>
+          <label>目前已有 % （0 ~ 99.99）</label>
           <input type="number" id="currentPct" placeholder="例：4.70" min="0" max="99.99" step="0.01">
         </div>
         <div id="progress-exp" class="field" style="display:none">
@@ -190,16 +275,16 @@
 
       <div class="section">
         <div class="section-label">獲得經驗設定</div>
-        <div class="toggle-tabs" style="margin-bottom:12px">
+        <div class="toggle-tabs">
           <button class="toggle-tab" id="tab-permin" onclick="switchExpTab('permin')">每分鐘</button>
           <button class="toggle-tab active" id="tab-per10min" onclick="switchExpTab('per10min')">每10分鐘</button>
         </div>
         <div id="exp-permin" class="field" style="display:none">
-          <label>EXP / 分鐘（未加倍）　可輸入 W 代替萬，如 18.5W</label>
+          <label>EXP / 分鐘（未加倍）　可用 W 代替萬，如 18.5W</label>
           <input type="text" id="expPerMin" placeholder="例：18.5W 或 185000" inputmode="decimal">
         </div>
         <div id="exp-per10min" class="field">
-          <label>EXP / 10分鐘（未加倍）　可輸入 W 代替萬，如 185W</label>
+          <label>EXP / 10分鐘（未加倍）　可用 W 代替萬，如 185W</label>
           <input type="text" id="expPer10Min" placeholder="例：185W 或 1850000" inputmode="decimal">
         </div>
       </div>
@@ -233,7 +318,10 @@
 
     <!-- 右卡：結果 -->
     <div class="card">
-      <div class="card-title">計算結果</div>
+      <div class="card-title">
+        計算結果
+        <button class="share-btn" id="shareBtn" onclick="shareURL()">🔗 <span>複製分享連結</span></button>
+      </div>
 
       <div class="result-total">
         <div class="r-label">剩餘所需經驗值</div>
@@ -273,18 +361,17 @@
 
       <p class="note">※ 官方數值，支援 Lv.1 ~ Lv.200</p>
 
-      <!-- 加倍卷計算 -->
       <div class="info-box">
         <div class="ib-title">加倍卷計算（每張 30 分鐘）</div>
         <div class="info-stat">
           <span class="is-label">全程加倍需要幾張</span>
           <span class="is-value is-hl" id="couponsNeeded">—</span>
         </div>
-        <div class="info-stat" id="scheduleRow1" style="display:none">
+        <div class="info-stat">
           <span class="is-label">幾天能練完（加倍）</span>
           <span class="is-value" id="daysWithBoost">—</span>
         </div>
-        <div class="info-stat" id="scheduleRow2" style="display:none">
+        <div class="info-stat">
           <span class="is-label">幾天能練完（不加倍）</span>
           <span class="is-value" id="daysNoBoost">—</span>
         </div>
@@ -292,7 +379,40 @@
     </div>
   </div>
 
+  <!-- 逐等級明細 -->
+  <div class="full-card" id="breakdownCard" style="display:none">
+    <div class="card-title" style="cursor:pointer;user-select:none" onclick="toggleBreakdown()">
+      <span>逐等級明細</span>
+      <span id="breakdownArrow" style="font-size:0.85rem;color:#5ab87a">▼</span>
+    </div>
+    <div id="breakdownTableWrap" style="display:none">
+      <div class="breakdown-wrap">
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th>等級</th>
+              <th>所需 EXP</th>
+              <th>時間 1x</th>
+              <th>時間 <span id="breakdownMultLabel">2x</span></th>
+            </tr>
+          </thead>
+          <tbody id="breakdownTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 歷史紀錄 -->
+  <div class="full-card">
+    <div class="card-title">
+      歷史紀錄
+      <button class="history-clear" onclick="clearHistory()">清除全部</button>
+    </div>
+    <div id="historyList"><div class="history-empty">尚無紀錄，計算後自動儲存</div></div>
+  </div>
+
 <script>
+// === EXP TABLE ===
 const EXP_TABLE = [];
 EXP_TABLE[0] = 0; EXP_TABLE[1] = 0;
 const RAW = [
@@ -319,6 +439,14 @@ const RAW = [
 ];
 RAW.forEach(([lv, exp]) => { EXP_TABLE[lv] = exp; });
 
+// === STATE ===
+let currentMult = 2;
+let progressTab = 'pct';
+let expTab = 'per10min';
+let breakdownOpen = false;
+let _histTimer = null;
+
+// === HELPERS ===
 function formatExp(n) {
   if (n >= 1e12) return (n / 1e12).toFixed(2) + ' 兆';
   if (n >= 1e8)  return (n / 1e8).toFixed(2) + ' 億';
@@ -330,80 +458,95 @@ function formatDHM(minutes) {
   const m = Math.ceil(minutes);
   if (m < 60) return m + ' 分鐘';
   const h = Math.floor(m / 60), rm = m % 60;
-  if (h < 24) return h + ' 小時' + (rm > 0 ? ' ' + rm + ' 分' : '');
+  if (h < 24) return h + ' 小時' + (rm ? ' ' + rm + ' 分' : '');
   const d = Math.floor(h / 24), rh = h % 24;
-  return d + ' 天 ' + rh + ' 小時' + (rm > 0 ? ' ' + rm + ' 分' : '');
+  return d + ' 天 ' + rh + ' 小時' + (rm ? ' ' + rm + ' 分' : '');
 }
 function formatHM(minutes) {
   if (!isFinite(minutes) || minutes <= 0) return null;
   const m = Math.ceil(minutes);
   if (m < 60) return m + ' 分鐘';
   const h = Math.floor(m / 60), rm = m % 60;
-  return h + ' 小時' + (rm > 0 ? ' ' + rm + ' 分' : '');
+  return h + ' 小時' + (rm ? ' ' + rm + ' 分' : '');
 }
 function getTotalExp(from, to) {
   let total = 0;
   for (let lv = from; lv < to; lv++) total += EXP_TABLE[lv] || 0;
   return total;
 }
-
-let currentMult = 2;
-let progressTab = 'pct';
-let expTab = 'per10min';
-
-// 解析 EXP 輸入，支援 W（萬）
-function parseExp(val) {
+function parseExpVal(val) {
   if (!val || !val.trim()) return NaN;
   const s = val.trim().toUpperCase();
   if (s.endsWith('W')) {
-    const num = parseFloat(s.slice(0, -1));
-    return isNaN(num) ? NaN : num * 10000;
+    const n = parseFloat(s.slice(0, -1));
+    return isNaN(n) ? NaN : n * 10000;
   }
   return parseFloat(s);
 }
+function setText(id, text) { document.getElementById(id).textContent = text; }
+function setHTML(id, html) { document.getElementById(id).innerHTML = html; }
+function showEl(id, show)  { document.getElementById(id).style.display = show ? '' : 'none'; }
 
+// === TABS ===
 function switchExpTab(tab) {
   expTab = tab;
-  document.getElementById('exp-permin').style.display   = tab === 'permin'   ? '' : 'none';
-  document.getElementById('exp-per10min').style.display = tab === 'per10min' ? '' : 'none';
+  showEl('exp-permin',   tab === 'permin');
+  showEl('exp-per10min', tab === 'per10min');
   document.getElementById('tab-permin').classList.toggle('active', tab === 'permin');
   document.getElementById('tab-per10min').classList.toggle('active', tab === 'per10min');
   calculate();
 }
-
 function switchProgressTab(tab) {
   progressTab = tab;
-  document.getElementById('progress-pct').style.display = tab === 'pct' ? '' : 'none';
-  document.getElementById('progress-exp').style.display = tab === 'exp' ? '' : 'none';
+  showEl('progress-pct', tab === 'pct');
+  showEl('progress-exp', tab === 'exp');
   document.getElementById('tab-pct').classList.toggle('active', tab === 'pct');
   document.getElementById('tab-exp').classList.toggle('active', tab === 'exp');
   calculate();
 }
 
-function setText(id, text) { document.getElementById(id).textContent = text; }
-function setHTML(id, html) { document.getElementById(id).innerHTML = html; }
-function showRow(id, show) { document.getElementById(id).style.display = show ? '' : 'none'; }
+// === BREAKDOWN TABLE ===
+function toggleBreakdown() {
+  breakdownOpen = !breakdownOpen;
+  showEl('breakdownTableWrap', breakdownOpen);
+  document.getElementById('breakdownArrow').textContent = breakdownOpen ? '▲' : '▼';
+}
+function renderBreakdownTable(from, to, alreadyExp, epm, mult) {
+  document.getElementById('breakdownMultLabel').textContent = mult + 'x';
+  let rows = '';
+  for (let lv = from; lv < to; lv++) {
+    const full = EXP_TABLE[lv] || 0;
+    const exp  = (lv === from && alreadyExp > 0) ? full - alreadyExp : full;
+    const mNo   = epm > 0 ? exp / epm : 0;
+    const mMult = epm > 0 ? exp / (epm * mult) : 0;
+    rows += `<tr>
+      <td>Lv.${lv}</td>
+      <td class="hl">${formatExp(exp)}</td>
+      <td>${epm > 0 ? (formatDHM(mNo) || '—') : '—'}</td>
+      <td>${epm > 0 ? (formatDHM(mMult) || '—') : '—'}</td>
+    </tr>`;
+  }
+  document.getElementById('breakdownTbody').innerHTML =
+    rows || '<tr><td colspan="4" style="color:#555;text-align:center;padding:16px">無資料</td></tr>';
+}
+
+// === CALCULATE ===
+function getEpm() {
+  if (expTab === 'permin') return parseExpVal(document.getElementById('expPerMin').value);
+  return parseExpVal(document.getElementById('expPer10Min').value) / 10;
+}
 
 function calculate() {
   const fromVal = document.getElementById('fromLevel').value;
   const toVal   = document.getElementById('toLevel').value;
   const from = parseInt(fromVal), to = parseInt(toVal);
-
-  // 讀取 EXP（支援 W）
-  let epm, epmVal;
-  if (expTab === 'permin') {
-    epmVal = document.getElementById('expPerMin').value;
-    epm = parseExp(epmVal);
-  } else {
-    epmVal = document.getElementById('expPer10Min').value;
-    const per10 = parseExp(epmVal);
-    epm = per10 / 10; // 換算成每分鐘
-  }
   const mult = currentMult;
-
   document.getElementById('multLabel').textContent = mult + 'x';
 
-  if (!fromVal || !toVal || isNaN(from) || isNaN(to)) {
+  const epm    = getEpm();
+  const hasEpm = !isNaN(epm) && epm > 0;
+
+  const reset = () => {
     setHTML('totalExp', '<span class="empty">請輸入等級範圍</span>');
     setText('levelRange', '');
     setHTML('timeNo_dhm', '<span class="empty">—</span>');
@@ -412,47 +555,40 @@ function calculate() {
     setText('timeMult_h', ''); setText('timeMult_min', '');
     setText('timeSaved', '—'); setText('minNo', '—'); setText('minMult', '—');
     setText('couponsNeeded', '—');
-    showRow('scheduleRow1', false); showRow('scheduleRow2', false);
-    return;
-  }
+    setText('daysWithBoost', '—'); setText('daysNoBoost', '—');
+    showEl('breakdownCard', false); showEl('breakdownTableWrap', false);
+  };
+
+  if (!fromVal || !toVal || isNaN(from) || isNaN(to)) { reset(); return; }
   if (from >= to) {
     setHTML('totalExp', '<span class="empty">目標等級須大於目前等級</span>');
-    setText('levelRange', '');
-    return;
+    setText('levelRange', ''); return;
   }
   if (to > 200) {
     setHTML('totalExp', '<span class="empty">最高支援至 200 等</span>');
-    return;
+    setText('levelRange', ''); return;
   }
 
-  // 計算剩餘經驗（扣掉當前進度）
-  const fullTotal = getTotalExp(from, to);
-  let alreadyExp = 0;
+  // Progress
   const levelExpNeeded = EXP_TABLE[from] || 0;
-
+  let alreadyExp = 0;
   if (progressTab === 'pct') {
-    const pctVal = document.getElementById('currentPct').value;
-    const pct = parseFloat(pctVal);
-    if (pctVal && !isNaN(pct) && pct > 0 && pct < 100) {
-      alreadyExp = levelExpNeeded * (pct / 100);
-    }
+    const pct = parseFloat(document.getElementById('currentPct').value);
+    if (!isNaN(pct) && pct > 0 && pct < 100) alreadyExp = levelExpNeeded * (pct / 100);
   } else {
-    const expVal = document.getElementById('currentExp').value;
-    const expOwned = parseFloat(expVal);
-    if (expVal && !isNaN(expOwned) && expOwned > 0) {
-      alreadyExp = Math.min(expOwned, levelExpNeeded);
-    }
+    const owned = parseFloat(document.getElementById('currentExp').value);
+    if (!isNaN(owned) && owned > 0) alreadyExp = Math.min(owned, levelExpNeeded);
   }
 
-  const total = fullTotal - alreadyExp;
-  const progressNote = alreadyExp > 0
-    ? `Lv.${from} → Lv.${to}（${to - from} 等，已扣除進度）`
-    : `Lv.${from} → Lv.${to}（${to - from} 等）`;
-
+  const total = getTotalExp(from, to) - alreadyExp;
+  const progressNote = alreadyExp > 0 ? '，已扣除進度' : '';
   setHTML('totalExp', formatExp(total));
-  setText('levelRange', progressNote);
+  setText('levelRange', `Lv.${from} → Lv.${to}（${to - from} 等${progressNote}）`);
 
-  const hasEpm = epmVal && epmVal.trim() && !isNaN(epm) && epm > 0;
+  showEl('breakdownCard', true);
+  renderBreakdownTable(from, to, alreadyExp, hasEpm ? epm : 0, mult);
+  showEl('breakdownTableWrap', breakdownOpen);
+
   if (!hasEpm) {
     setHTML('timeNo_dhm', '<span class="empty">請輸入 EXP/分</span>');
     setText('timeNo_h', ''); setText('timeNo_min', '');
@@ -460,7 +596,7 @@ function calculate() {
     setText('timeMult_h', ''); setText('timeMult_min', '');
     setText('timeSaved', '—'); setText('minNo', '—'); setText('minMult', '—');
     setText('couponsNeeded', '—');
-    showRow('scheduleRow1', false); showRow('scheduleRow2', false);
+    setText('daysWithBoost', '—'); setText('daysNoBoost', '—');
     return;
   }
 
@@ -481,34 +617,133 @@ function calculate() {
   setText('timeSaved', formatDHM(saved) || '—');
   setText('minNo',   Math.ceil(minNo).toLocaleString() + ' 分');
   setText('minMult', Math.ceil(minMult).toLocaleString() + ' 分');
+  setText('couponsNeeded', mult <= 1 ? '無需加倍卷' : Math.ceil(minMult / 30) + ' 張');
 
-  // 加倍卷
-  if (mult <= 1) {
-    setText('couponsNeeded', '無需加倍卷');
-  } else {
-    setText('couponsNeeded', Math.ceil(minMult / 30) + ' 張');
-  }
-
-  // 每天排程
-  const dailyVal = document.getElementById('dailyHours').value;
-  const dailyH   = parseFloat(dailyVal);
-  const hasDaily = dailyVal && !isNaN(dailyH) && dailyH > 0;
-
-  showRow('scheduleRow1', hasDaily);
-  showRow('scheduleRow2', hasDaily);
-
-
+  const dailyH = parseFloat(document.getElementById('dailyHours').value);
+  const hasDaily = !isNaN(dailyH) && dailyH > 0;
   if (hasDaily) {
-    const dailyMin    = dailyH * 60;
-    const daysBoost   = Math.ceil(minMult / dailyMin);
-    const daysNo      = Math.ceil(minNo / dailyMin);
-    const couponsDay  = Math.ceil(dailyMin / 30);
-
-    setText('daysWithBoost', daysBoost + ' 天');
-    setText('daysNoBoost',   daysNo + ' 天');
+    const dm = dailyH * 60;
+    setText('daysWithBoost', Math.ceil(minMult / dm) + ' 天');
+    setText('daysNoBoost',   Math.ceil(minNo / dm) + ' 天');
+  } else {
+    setText('daysWithBoost', '—');
+    setText('daysNoBoost',   '—');
   }
+
+  scheduleHistorySave({ from, to, total, minNo, minMult, mult, alreadyExp });
 }
 
+// === SHARE URL ===
+function buildParams() {
+  const p = new URLSearchParams();
+  p.set('from',  document.getElementById('fromLevel').value   || '');
+  p.set('to',    document.getElementById('toLevel').value     || '');
+  p.set('ptab',  progressTab);
+  p.set('pct',   document.getElementById('currentPct').value  || '');
+  p.set('exp',   document.getElementById('currentExp').value  || '');
+  p.set('etab',  expTab);
+  p.set('epm',   document.getElementById('expPerMin').value   || '');
+  p.set('ep10',  document.getElementById('expPer10Min').value || '');
+  p.set('mult',  currentMult);
+  p.set('daily', document.getElementById('dailyHours').value  || '');
+  return p;
+}
+function shareURL() {
+  const url = location.href.split('?')[0] + '?' + buildParams().toString();
+  const btn = document.getElementById('shareBtn');
+  (navigator.clipboard?.writeText(url) || Promise.reject())
+    .then(() => {
+      btn.innerHTML = '✓ <span>已複製！</span>';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = '🔗 <span>複製分享連結</span>'; btn.classList.remove('copied'); }, 2000);
+    })
+    .catch(() => prompt('複製此連結：', url));
+}
+function loadFromURL() {
+  const p = new URLSearchParams(location.search);
+  if (!p.has('from') && !p.has('to')) return;
+  if (p.get('from')) document.getElementById('fromLevel').value = p.get('from');
+  if (p.get('to'))   document.getElementById('toLevel').value   = p.get('to');
+  if (p.has('ptab')) switchProgressTab(p.get('ptab'));
+  if (p.get('pct'))  document.getElementById('currentPct').value = p.get('pct');
+  if (p.get('exp'))  document.getElementById('currentExp').value = p.get('exp');
+  if (p.has('etab')) switchExpTab(p.get('etab'));
+  if (p.get('epm'))  document.getElementById('expPerMin').value  = p.get('epm');
+  if (p.get('ep10')) document.getElementById('expPer10Min').value = p.get('ep10');
+  if (p.has('mult')) {
+    currentMult = parseFloat(p.get('mult')) || 2;
+    document.getElementById('customMult').value = currentMult;
+    document.querySelectorAll('.mult-btn').forEach(b =>
+      b.classList.toggle('active', parseFloat(b.dataset.val) === currentMult));
+  }
+  if (p.get('daily')) document.getElementById('dailyHours').value = p.get('daily');
+}
+
+// === HISTORY ===
+const HIST_KEY = 'maplecalc_v3_history';
+
+function scheduleHistorySave(entry) {
+  clearTimeout(_histTimer);
+  _histTimer = setTimeout(() => saveHistory(entry), 3000);
+}
+function saveHistory(entry) {
+  const url = location.href.split('?')[0] + '?' + buildParams().toString();
+  const progressNote = entry.alreadyExp > 0 ? '，已扣除進度' : '';
+  const item = {
+    ts: Date.now(),
+    rangeText: `Lv.${entry.from} → Lv.${entry.to}（${entry.to - entry.from} 等${progressNote}）`,
+    totalNet: entry.total,
+    minNo: entry.minNo,
+    minMult: entry.minMult,
+    mult: entry.mult,
+    url,
+  };
+  let hist = getHistory();
+  if (hist.length && hist[0].url === item.url) return;
+  hist.unshift(item);
+  localStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(0, 10)));
+  renderHistory();
+}
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); } catch { return []; }
+}
+function clearHistory() { localStorage.removeItem(HIST_KEY); renderHistory(); }
+function deleteHistoryItem(idx) {
+  const hist = getHistory(); hist.splice(idx, 1);
+  localStorage.setItem(HIST_KEY, JSON.stringify(hist)); renderHistory();
+}
+function restoreHistory(url) {
+  history.replaceState(null, '', url);
+  loadFromURL();
+  calculate();
+}
+function formatTS(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('zh-TW') + ' ' +
+         d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+}
+function renderHistory() {
+  const hist = getHistory();
+  const el = document.getElementById('historyList');
+  if (!hist.length) { el.innerHTML = '<div class="history-empty">尚無紀錄，計算後自動儲存</div>'; return; }
+  el.innerHTML = '<div class="history-list">' +
+    hist.map((h, idx) => {
+      const safeUrl = h.url.replace(/'/g, '%27');
+      return `<div class="history-item" onclick="restoreHistory('${safeUrl}')">
+        <div class="hi-meta">
+          <div class="hi-range">${h.rangeText}</div>
+          <div class="hi-detail">倍率 ${h.mult}x · ${formatExp(h.totalNet)} EXP</div>
+        </div>
+        <div class="hi-time">
+          <div class="hi-result">${h.minMult ? (formatDHM(h.minMult) || '—') : '—'}</div>
+          <div class="hi-ts">${formatTS(h.ts)}</div>
+        </div>
+        <button class="hi-del" onclick="event.stopPropagation();deleteHistoryItem(${idx})" title="刪除">✕</button>
+      </div>`;
+    }).join('') + '</div>';
+}
+
+// === EVENTS ===
 document.querySelectorAll('.mult-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     currentMult = parseFloat(btn.dataset.val);
@@ -526,6 +761,11 @@ document.getElementById('customMult').addEventListener('input', e => {
 ['fromLevel','toLevel','expPerMin','expPer10Min','currentPct','currentExp','dailyHours'].forEach(id => {
   document.getElementById(id).addEventListener('input', calculate);
 });
+
+// === INIT ===
+loadFromURL();
+renderHistory();
+calculate();
 </script>
 </body>
 </html>
