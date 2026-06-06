@@ -1396,7 +1396,6 @@ function renderCmRecords() {
       ${r.note ? `<div class="cm-note">💬 ${escHtml(r.note)}</div>` : ''}
       <div class="cm-footer">
         <span class="cm-ts">${tsText}</span>
-        <button class="cm-apply-btn" onclick="applyCmRecord(${r.exp10})">套用到計算機</button>
       </div>
     </div>`;
   }).join('') + '</div>';
@@ -1407,6 +1406,12 @@ function applyCmRecord(exp10) {
   document.getElementById('expPer10Min').value = exp10;
   calculate();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function formatTS(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('zh-TW') + ' ' +
+         d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
 }
 
 function escHtml(str) {
@@ -1420,6 +1425,7 @@ function switchNav(page) {
   document.getElementById('pageCm').style.display   = isCalc ? 'none' : 'flex';
   document.getElementById('navCalc').classList.toggle('active', isCalc);
   document.getElementById('navCm').classList.toggle('active', !isCalc);
+  localStorage.setItem('maplecalc_nav', page);
   if (!isCalc) loadCmRecords();
 }
 
@@ -1437,7 +1443,8 @@ if (localStorage.getItem('maplecalc_theme') === 'light') {
 }
 loadFromURL();
 calculate();
-loadCmRecords();
+const _savedNav = localStorage.getItem('maplecalc_nav');
+if (_savedNav === 'cm') switchNav('cm'); else loadCmRecords();
 </script>
 </body>
 </html>
