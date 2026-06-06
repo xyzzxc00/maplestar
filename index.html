@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>楓星升等計算器</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -14,24 +16,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 16px;
-    gap: 16px;
+    padding: 24px;
+    gap: 20px;
   }
-  h1 { font-size: 2rem; color: #5dca82; margin-bottom: 2px; text-align: center; }
+  h1 { font-size: 2rem; color: #5dca82; margin-bottom: 4px; text-align: center; }
   .subtitle { font-size: 0.95rem; color: #556655; text-align: center; }
 
   .layout {
     display: flex;
-    gap: 16px;
+    gap: 24px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     align-items: flex-start;
   }
   .card {
     background: #2a2a2a;
     border: 1px solid rgba(80,200,120,0.2);
     border-radius: 16px;
-    padding: 28px;
+    padding: 40px;
     flex: 1;
     box-shadow: 0 4px 20px rgba(0,0,0,0.35);
   }
@@ -39,90 +41,97 @@
     background: #2a2a2a;
     border: 1px solid rgba(80,200,120,0.2);
     border-radius: 16px;
-    padding: 24px 28px;
+    padding: 32px 40px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.35);
   }
   .card-title {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: #5ab87a;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     padding-bottom: 12px;
     border-bottom: 1px solid #383838;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
   }
-  .section { margin-bottom: 20px; }
+  .section { margin-bottom: 24px; }
   .section:last-child { margin-bottom: 0; }
   .section-label {
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     color: #5ab87a;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
-  .section-label .optional { color: #555; font-size: 0.75rem; text-transform: none; letter-spacing: 0; margin-left: 5px; }
-  .row { display: flex; gap: 8px; align-items: center; }
-  .field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-  label { font-size: 0.88rem; color: #aaaaaa; }
-  input[type="number"], input[type="text"] {
+  .section-label .optional { color: #555; font-size: 0.78rem; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .field { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 0.95rem; color: #aaaaaa; }
+  input[type="number"], input[type="text"], select {
     background: #333;
     border: 1px solid #484848;
     border-radius: 8px;
     color: #f0f0f0;
-    padding: 10px 12px;
-    font-size: 1rem;
+    padding: 10px 13px;
+    font-size: 1.05rem;
     width: 100%;
     outline: none;
     transition: border-color 0.2s;
     -webkit-appearance: none;
   }
-  input[type="number"]:focus, input[type="text"]:focus { border-color: #4aaa70; box-shadow: 0 0 0 3px rgba(60,160,90,0.15); }
+  select { cursor: pointer; }
+  select option { background: #333; color: #f0f0f0; }
+  select option:disabled { color: #555; }
+  input[type="number"]:focus, input[type="text"]:focus, select:focus { border-color: #4aaa70; box-shadow: 0 0 0 3px rgba(60,160,90,0.15); }
   input[type="number"]::placeholder, input[type="text"]::placeholder { color: #555; }
-  .arrow { font-size: 1.3rem; color: #4a8a60; flex-shrink: 0; margin-top: 20px; }
+  .arrow { font-size: 1.4rem; color: #4a8a60; flex-shrink: 0; margin-top: 22px; }
 
   /* toggle tabs */
   .toggle-tabs { display: flex; margin-bottom: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #484848; width: fit-content; }
   .toggle-tab {
-    background: #333; color: #888; padding: 7px 16px; cursor: pointer;
-    font-size: 0.88rem; border: none; transition: all 0.15s;
+    background: #333; color: #888; padding: 6px 16px; cursor: pointer;
+    font-size: 0.9rem; border: none; transition: all 0.15s;
   }
   .toggle-tab.active { background: #2e7d4a; color: #fff; }
 
-  .mult-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .mult-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   .mult-btn {
     background: #333; border: 1px solid #484848; border-radius: 6px;
-    color: #ccc; padding: 8px 14px; cursor: pointer; font-size: 0.95rem; transition: all 0.15s;
-    flex: 1; min-width: 48px; text-align: center;
+    color: #ccc; padding: 7px 16px; cursor: pointer; font-size: 1rem; transition: all 0.15s;
   }
   .mult-btn:hover { background: #3d3d3d; }
-  .mult-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; box-shadow: 0 2px 8px rgba(46,125,74,0.3); }
+  .mult-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; box-shadow: 0 2px 8px rgba(46,125,74,0.4); }
 
   /* Result card */
   .result-total {
     background: #333; border: 1px solid rgba(80,200,120,0.2);
-    border-radius: 10px; padding: 18px; text-align: center; margin-bottom: 14px;
+    border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 16px;
   }
-  .result-total .r-label { font-size: 0.82rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-  .result-total .r-value { font-size: 1.8rem; font-weight: bold; color: #fff; }
-  .result-total .r-sub { font-size: 0.88rem; color: #666; margin-top: 3px; }
+  .result-total .r-label { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .result-total .r-value { font-size: 1.9rem; font-weight: bold; color: #fff; }
+  .result-total .r-sub { font-size: 0.92rem; color: #666; margin-top: 4px; }
 
-  .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
   .time-box {
     background: #333; border: 1px solid rgba(80,200,120,0.15);
-    border-radius: 10px; padding: 16px 12px; text-align: center;
+    border-radius: 10px; padding: 18px; text-align: center;
   }
-  .time-box .r-label { font-size: 0.78rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
-  .time-box .r-main { font-size: 1.2rem; font-weight: bold; color: #fff; margin-bottom: 3px; }
-  .time-box .r-alt { font-size: 0.88rem; color: #888; }
-  .time-box .r-sub { font-size: 0.8rem; color: #555; margin-top: 2px; }
+  .time-box.highlight {
+    background: #263326; border-color: rgba(80,200,120,0.55);
+    box-shadow: 0 0 0 1px rgba(80,200,120,0.2);
+  }
+  .time-box.highlight .r-main { color: #5dca82; font-size: 1.5rem; }
+  .time-box .r-label { font-size: 0.88rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .time-box .r-main { font-size: 1.3rem; font-weight: bold; color: #fff; margin-bottom: 4px; }
+  .time-box .r-alt { font-size: 0.95rem; color: #888; }
+  .time-box .r-sub { font-size: 0.85rem; color: #555; margin-top: 3px; }
 
-  .divider { border: none; border-top: 1px solid #383838; margin: 14px 0; }
+  .divider { border: none; border-top: 1px solid #383838; margin: 16px 0; }
   .stat-row {
     display: flex; justify-content: space-between; align-items: center;
     padding: 8px 0; border-bottom: 1px solid #2e2e2e; font-size: 0.95rem;
@@ -252,40 +261,17 @@
   .exp-rate-hint { color: #555; font-size: 0.85rem; }
 
   @media (max-width: 700px) {
-    .timer-layout { flex-direction: column; gap: 20px; }
-    .timer-sep { width: 100%; height: 1px; }
-    .timer-panel { width: 100%; }
-    .timer-body { align-items: stretch; }
-    .timer-display-wrap { align-self: center; }
+    .timer-layout { flex-direction: column; gap: 20px; width: 100%; }
+    .timer-sep { width: 100%; height: 1px; order: 2; }
+    .timer-panel { width: 100%; order: 3; flex-shrink: 0; }
+    .exp-tracker { order: 1; width: 100%; flex: unset; }
+    .timer-body { align-items: stretch; width: 100%; }
+    .timer-display-wrap { align-self: center; width: 150px; height: 150px; }
+    .timer-display-wrap svg { width: 150px; height: 150px; }
+    .timer-time { font-size: 2rem; }
+    .exp-tracker-fields { width: 100%; }
+    .exp-rate-box { width: 100%; }
   }
-
-  /* History */
-  .history-empty { color: #555; font-size: 0.95rem; text-align: center; padding: 16px 0; }
-  .history-list { display: flex; flex-direction: column; gap: 8px; }
-  .history-item {
-    background: #333; border: 1px solid #3a3a3a; border-radius: 10px;
-    padding: 12px 16px; cursor: pointer; transition: all 0.15s;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .history-item:hover { background: #383838; border-color: rgba(80,200,120,0.3); }
-  .hi-meta { flex: 1; min-width: 0; }
-  .hi-range { font-size: 0.95rem; color: #f0f0f0; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .hi-detail { font-size: 0.82rem; color: #777; }
-  .hi-time { text-align: right; flex-shrink: 0; }
-  .hi-result { font-size: 0.95rem; color: #5dca82; font-weight: 700; }
-  .hi-ts { font-size: 0.75rem; color: #555; margin-top: 1px; }
-  .hi-del {
-    background: none; border: none; color: #554040; cursor: pointer;
-    font-size: 1rem; padding: 5px 8px; border-radius: 4px;
-    transition: color 0.15s; flex-shrink: 0;
-  }
-  .hi-del:hover { color: #cc4444; }
-  .history-clear {
-    background: none; border: 1px solid #484848; border-radius: 6px;
-    color: #666; padding: 5px 13px; cursor: pointer; font-size: 0.82rem;
-    transition: all 0.15s; flex-shrink: 0;
-  }
-  .history-clear:hover { color: #cc4444; border-color: #664444; }
 
   .note { font-size: 0.78rem; color: #444; text-align: center; margin-top: 10px; }
   .empty { color: #444; font-size: 1rem; }
@@ -313,6 +299,121 @@
   @media (max-width: 400px) {
     .time-grid { grid-template-columns: 1fr; }
     .share-btn span { display: none; }
+  }
+
+  /* Page wrappers */
+  #pageCalc {
+    display: contents;
+  }
+  #pageCm {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Nav tabs */
+  .nav-tabs {
+    display: flex; gap: 0; border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(80,200,120,0.25); width: fit-content;
+  }
+  .nav-tab {
+    background: #2a2a2a; color: #888; padding: 10px 28px; cursor: pointer;
+    font-size: 0.95rem; border: none; transition: all 0.18s; font-weight: 500;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { background: #333; color: #ccc; }
+  .nav-tab.active { background: #2e7d4a; color: #fff; font-weight: 700; }
+  body.light .nav-tabs { border-color: rgba(40,140,80,0.25); }
+  body.light .nav-tab { background: #f0f0f0; color: #888; }
+  body.light .nav-tab:hover { background: #e8e8e8; color: #555; }
+  body.light .nav-tab.active { background: #2e7d4a; color: #fff; }
+
+  /* Community */
+  .cm-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .cm-filter-row { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; align-items: center; }
+  .cm-filter-input {
+    background: #333; border: 1px solid #484848; border-radius: 8px;
+    color: #f0f0f0; padding: 8px 12px; font-size: 0.88rem; outline: none;
+    transition: border-color 0.2s; min-width: 120px;
+  }
+  .cm-filter-input:focus { border-color: #4aaa70; }
+  .cm-add-btn {
+    background: #2e7d4a; border: none; border-radius: 8px; color: #fff;
+    padding: 8px 18px; cursor: pointer; font-size: 0.88rem; font-weight: 600;
+    transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .cm-add-btn:hover { background: #3a9a5c; }
+  .cm-form {
+    background: #2e3a32; border: 1px solid rgba(80,200,120,0.2);
+    border-radius: 12px; padding: 20px; margin-bottom: 20px;
+  }
+  .cm-form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .cm-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .cm-form .field label { color: #aaa; font-size: 0.82rem; }
+  .cm-form-actions { display: flex; gap: 10px; align-items: center; }
+  .cm-submit-btn {
+    background: #2e7d4a; border: none; border-radius: 8px; color: #fff;
+    padding: 10px 28px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
+    transition: background 0.15s;
+  }
+  .cm-submit-btn:hover { background: #3a9a5c; }
+  .cm-cancel-btn {
+    background: none; border: 1px solid #484848; border-radius: 8px; color: #888;
+    padding: 10px 18px; cursor: pointer; font-size: 0.88rem; transition: all 0.15s;
+  }
+  .cm-cancel-btn:hover { border-color: #666; color: #ccc; }
+  .cm-msg { font-size: 0.88rem; margin-left: 8px; }
+  .cm-msg.ok  { color: #5dca82; }
+  .cm-msg.err { color: #cc4444; }
+  .cm-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  .cm-card {
+    background: #333; border: 1px solid #3a3a3a; border-radius: 12px;
+    padding: 16px; display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.15s;
+  }
+  .cm-card:hover { border-color: rgba(80,200,120,0.35); }
+  .cm-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .cm-job { font-size: 1rem; font-weight: 700; color: #f0f0f0; }
+  .cm-map { font-size: 0.85rem; color: #5ab87a; }
+  .cm-stats { display: flex; flex-direction: column; gap: 4px; }
+  .cm-stat { display: flex; justify-content: space-between; font-size: 0.85rem; }
+  .cm-stat span:first-child { color: #777; }
+  .cm-stat span:last-child  { color: #f0f0f0; font-weight: 600; }
+  .cm-note { font-size: 0.8rem; color: #666; font-style: italic; border-top: 1px solid #3a3a3a; padding-top: 6px; }
+  .cm-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+  .cm-ts { font-size: 0.75rem; color: #555; }
+  .cm-apply-btn {
+    background: #2e3d32; border: 1px solid rgba(80,200,120,0.3); border-radius: 6px;
+    color: #5ab87a; padding: 5px 12px; cursor: pointer; font-size: 0.8rem;
+    transition: all 0.15s;
+  }
+  .cm-apply-btn:hover { background: #344a3a; color: #5dca82; }
+  .cm-empty { color: #555; text-align: center; padding: 32px 0; font-size: 0.95rem; }
+  .cm-loading { color: #555; text-align: center; padding: 32px 0; font-size: 0.95rem; }
+
+  /* Light mode - community */
+  body.light .cm-filter-input { background: #f5f5f5; border-color: #d8d8d8; color: #1a1a1a; }
+  body.light .cm-form { background: #eaf5ef; border-color: rgba(40,140,80,0.2); }
+  body.light .cm-form .field label { color: #666; }
+  body.light .cm-cancel-btn { border-color: #d8d8d8; color: #888; }
+  body.light .cm-card { background: #f5f5f5; border-color: #e8e8e8; }
+  body.light .cm-job { color: #1a1a1a; }
+  body.light .cm-stat span:first-child { color: #888; }
+  body.light .cm-stat span:last-child  { color: #1a1a1a; }
+  body.light .cm-note { color: #999; border-top-color: #e0e0e0; }
+  body.light .cm-ts { color: #bbb; }
+  body.light .cm-apply-btn { background: #eaf5ef; color: #1a7a40; }
+  body.light .cm-empty, body.light .cm-loading { color: #bbb; }
+
+  @media (max-width: 900px) { .cm-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) {
+    .cm-grid { grid-template-columns: 1fr; }
+    .cm-form-grid { grid-template-columns: 1fr 1fr; }
+    .cm-form-row  { grid-template-columns: 1fr; }
   }
 
   /* Theme toggle button */
@@ -387,15 +488,6 @@
   body.light .breakdown-table tbody tr:hover td { background: #f8f8f8; }
   body.light .breakdown-table td:first-child { color: #aaa; }
   body.light .breakdown-table td.hl { color: #1a7a40; }
-  body.light .history-empty { color: #bbb; }
-  body.light .history-item { background: #f5f5f5; border-color: #e8e8e8; }
-  body.light .history-item:hover { background: #eef5ee; border-color: rgba(40,140,80,0.3); }
-  body.light .hi-range { color: #1a1a1a; }
-  body.light .hi-detail { color: #888; }
-  body.light .hi-result { color: #1a7a40; }
-  body.light .hi-ts { color: #aaa; }
-  body.light .history-clear { border-color: #d8d8d8; color: #888; }
-  body.light .history-clear:hover { color: #cc4444; border-color: #cc4444; }
 </style>
 </head>
 <body>
@@ -403,6 +495,12 @@
   <h1>⚔ 楓星升等計算器</h1>
   <p class="subtitle">MapleStar Leveling Calculator</p>
 
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="navCalc" onclick="switchNav('calc')">⚔ 練等計算</button>
+    <button class="nav-tab" id="navCm" onclick="switchNav('cm')">👥 社群經驗資料庫</button>
+  </div>
+
+  <div id="pageCalc">
   <div class="layout">
     <!-- 左卡：輸入 -->
     <div class="card">
@@ -505,8 +603,8 @@
           <div class="r-alt" id="timeNo_h"></div>
           <div class="r-sub" id="timeNo_min"></div>
         </div>
-        <div class="time-box">
-          <div class="r-label">加倍後 <span id="multLabel">2x</span></div>
+        <div class="time-box highlight">
+          <div class="r-label">⚡ 加倍後 <span id="multLabel">2x</span></div>
           <div class="r-main" id="timeMult_dhm"><span class="empty">—</span></div>
           <div class="r-alt" id="timeMult_h"></div>
           <div class="r-sub" id="timeMult_min"></div>
@@ -530,20 +628,21 @@
 
       <p class="note">※ 官方數值，支援 Lv.1 ~ Lv.200</p>
 
-      <div class="info-box">
-        <div class="ib-title">加倍卷計算（每張 30 分鐘）</div>
-        <div class="info-stat">
-          <span class="is-label">全程加倍需要幾張</span>
-          <span class="is-value is-hl" id="couponsNeeded">—</span>
-        </div>
-        <div class="info-stat">
-          <span class="is-label">幾天能練完（加倍）</span>
-          <span class="is-value" id="daysWithBoost">—</span>
-        </div>
-        <div class="info-stat">
-          <span class="is-label">幾天能練完（不加倍）</span>
-          <span class="is-value" id="daysNoBoost">—</span>
-        </div>
+      <hr class="divider">
+      <div class="stat-row" style="padding-bottom:4px">
+        <span class="stat-label" style="color:#5ab87a;font-size:0.82rem;text-transform:uppercase;letter-spacing:1px">加倍卷計算（每張 30 分鐘）</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">全程加倍需要幾張</span>
+        <span class="stat-value" style="color:#5dca82;font-size:1.05rem" id="couponsNeeded">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">幾天能練完（加倍）</span>
+        <span class="stat-value" id="daysWithBoost">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">幾天能練完（不加倍）</span>
+        <span class="stat-value" id="daysNoBoost">—</span>
       </div>
     </div>
   </div>
@@ -629,9 +728,9 @@
 
   <!-- 逐等級明細 -->
   <div class="full-card" id="breakdownCard" style="display:none">
-    <div class="card-title" style="cursor:pointer;user-select:none" onclick="toggleBreakdown()">
+    <div class="card-title" style="cursor:pointer;user-select:none;transition:opacity 0.15s" onmouseenter="this.style.opacity='0.75'" onmouseleave="this.style.opacity='1'" onclick="toggleBreakdown()">
       <span>逐等級明細</span>
-      <span id="breakdownArrow" style="font-size:0.85rem;color:#5ab87a">▼</span>
+      <span id="breakdownArrow" style="font-size:0.85rem;background:#2e7d4a;color:#fff;padding:4px 12px;border-radius:6px;font-weight:600;letter-spacing:0">▼ 展開</span>
     </div>
     <div id="breakdownTableWrap" style="display:none">
       <div class="breakdown-wrap">
@@ -650,14 +749,97 @@
     </div>
   </div>
 
-  <!-- 歷史紀錄 -->
+  </div><!-- /pageCalc -->
+
+  <div id="pageCm" style="display:none">
+  <!-- 社群經驗資料庫 -->
   <div class="full-card">
-    <div class="card-title">
-      歷史紀錄
-      <button class="history-clear" onclick="clearHistory()">清除全部</button>
+    <div class="card-title">社群經驗資料庫</div>
+
+    <div class="cm-top">
+      <div class="cm-filter-row">
+        <select class="cm-filter-input" id="cmFilterJob" onchange="renderCmRecords()" style="min-width:120px">
+          <option value="">全部職業</option>
+          <optgroup label="劍士系"><option>英雄</option><option>黑騎士</option><option>聖騎士</option><option>劍豪</option><option>惡魔殺手</option></optgroup>
+          <optgroup label="弓箭手系"><option>箭神</option><option>神射手</option><option>狂豹獵人</option><option>精靈遊俠</option></optgroup>
+          <optgroup label="法師系"><option>大魔導士（冰／雷）</option><option>大魔導士（火／毒）</option><option>主教</option><option>煉獄巫師</option><option>龍魔導士</option><option>陰陽師</option></optgroup>
+          <optgroup label="盜賊系"><option>夜使者</option><option>夜行者</option><option>影武者</option></optgroup>
+          <optgroup label="海盜與其他"><option>拳霸</option><option>重炮指揮官</option><option>機甲戰神</option></optgroup>
+          <optgroup label="皇家騎士團"><option>聖魂劍士</option><option>烈焰巫師</option><option>破風使者</option><option>暗夜行者</option><option>閃雷悍將</option></optgroup>
+        </select>
+        <input class="cm-filter-input" id="cmFilterMap" placeholder="🔍 篩選地圖" oninput="renderCmRecords()">
+        <input class="cm-filter-input" id="cmFilterLvMin" type="number" placeholder="最低等級" min="1" max="200" style="width:90px" oninput="renderCmRecords()">
+        <span style="color:#555;font-size:0.85rem">~</span>
+        <input class="cm-filter-input" id="cmFilterLvMax" type="number" placeholder="最高等級" min="1" max="200" style="width:90px" oninput="renderCmRecords()">
+      </div>
+      <button class="cm-add-btn" id="cmAddBtn" onclick="toggleCmForm()">＋ 新增紀錄</button>
     </div>
-    <div id="historyList"><div class="history-empty">尚無紀錄，計算後自動儲存</div></div>
+
+    <div id="cmForm" style="display:none">
+      <div class="cm-form">
+        <div class="cm-form-grid">
+          <div class="field">
+            <label>職業 *</label>
+            <select id="cmJob">
+              <option value="" disabled selected>請選擇職業</option>
+              <optgroup label="劍士系">
+                <option>英雄</option><option>黑騎士</option><option>聖騎士</option><option>劍豪</option><option>惡魔殺手</option>
+              </optgroup>
+              <optgroup label="弓箭手系">
+                <option>箭神</option><option>神射手</option><option>狂豹獵人</option><option>精靈遊俠</option>
+              </optgroup>
+              <optgroup label="法師系">
+                <option>大魔導士（冰／雷）</option><option>大魔導士（火／毒）</option><option>主教</option>
+                <option>煉獄巫師</option><option>龍魔導士</option><option>陰陽師</option>
+              </optgroup>
+              <optgroup label="盜賊系">
+                <option>夜使者</option><option>夜行者</option><option>影武者</option>
+              </optgroup>
+              <optgroup label="海盜與其他">
+                <option>拳霸</option><option>重炮指揮官</option><option>機甲戰神</option>
+              </optgroup>
+              <optgroup label="皇家騎士團">
+                <option>聖魂劍士</option><option>烈焰巫師</option><option>破風使者</option><option>暗夜行者</option><option>閃雷悍將</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field">
+            <label>地圖名稱（怪物）*</label>
+            <input type="text" id="cmMap" placeholder="例：被遺忘的時間路（時間的守護者）">
+          </div>
+          <div class="field">
+            <label>角色等級 *</label>
+            <input type="number" id="cmLevel" placeholder="例：135" min="1" max="300">
+          </div>
+        </div>
+        <div class="cm-form-row">
+          <div class="field">
+            <label>EXP / 10分鐘（未加倍）*　支援 W</label>
+            <input type="text" id="cmExp" placeholder="例：185W 或 1850000" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label>表攻（選填）　支援 W</label>
+            <input type="text" id="cmAtk" placeholder="例：3.5W 或 35000" inputmode="decimal">
+          </div>
+        </div>
+        <div class="cm-form-row">
+          <div class="field">
+            <label>備註（選填）</label>
+            <input type="text" id="cmNote" placeholder="例：開技能、有吃藥水等">
+          </div>
+        </div>
+        <div class="cm-form-actions">
+          <button class="cm-submit-btn" onclick="submitCmRecord()">送出</button>
+          <button class="cm-cancel-btn" onclick="toggleCmForm()">取消</button>
+          <span class="cm-msg" id="cmMsg"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="cmList"><div class="cm-loading">載入中...</div></div>
   </div>
+
+  </div><!-- /pageCm -->
 
 <script>
 // === EXP TABLE ===
@@ -692,7 +874,6 @@ let currentMult = 2;
 let progressTab = 'pct';
 let expTab = 'per10min';
 let breakdownOpen = false;
-let _histTimer = null;
 
 // === HELPERS ===
 function formatExp(n) {
@@ -757,7 +938,7 @@ function switchProgressTab(tab) {
 function toggleBreakdown() {
   breakdownOpen = !breakdownOpen;
   showEl('breakdownTableWrap', breakdownOpen);
-  document.getElementById('breakdownArrow').textContent = breakdownOpen ? '▲' : '▼';
+  document.getElementById('breakdownArrow').textContent = breakdownOpen ? '▲ 收起' : '▼ 展開';
 }
 function renderBreakdownTable(from, to, alreadyExp, epm, mult) {
   document.getElementById('breakdownMultLabel').textContent = mult + 'x';
@@ -878,7 +1059,6 @@ function calculate() {
     setText('daysNoBoost',   '—');
   }
 
-  scheduleHistorySave({ from, to, total, minNo, minMult, mult, alreadyExp });
 }
 
 // === SHARE URL ===
@@ -927,69 +1107,6 @@ function loadFromURL() {
   if (p.get('daily')) document.getElementById('dailyHours').value = p.get('daily');
 }
 
-// === HISTORY ===
-const HIST_KEY = 'maplecalc_v3_history';
-
-function scheduleHistorySave(entry) {
-  clearTimeout(_histTimer);
-  _histTimer = setTimeout(() => saveHistory(entry), 3000);
-}
-function saveHistory(entry) {
-  const url = location.href.split('?')[0] + '?' + buildParams().toString();
-  const progressNote = entry.alreadyExp > 0 ? '，已扣除進度' : '';
-  const item = {
-    ts: Date.now(),
-    rangeText: `Lv.${entry.from} → Lv.${entry.to}（${entry.to - entry.from} 等${progressNote}）`,
-    totalNet: entry.total,
-    minNo: entry.minNo,
-    minMult: entry.minMult,
-    mult: entry.mult,
-    url,
-  };
-  let hist = getHistory();
-  if (hist.length && hist[0].url === item.url) return;
-  hist.unshift(item);
-  localStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(0, 10)));
-  renderHistory();
-}
-function getHistory() {
-  try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); } catch { return []; }
-}
-function clearHistory() { localStorage.removeItem(HIST_KEY); renderHistory(); }
-function deleteHistoryItem(idx) {
-  const hist = getHistory(); hist.splice(idx, 1);
-  localStorage.setItem(HIST_KEY, JSON.stringify(hist)); renderHistory();
-}
-function restoreHistory(url) {
-  history.replaceState(null, '', url);
-  loadFromURL();
-  calculate();
-}
-function formatTS(ts) {
-  const d = new Date(ts);
-  return d.toLocaleDateString('zh-TW') + ' ' +
-         d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
-}
-function renderHistory() {
-  const hist = getHistory();
-  const el = document.getElementById('historyList');
-  if (!hist.length) { el.innerHTML = '<div class="history-empty">尚無紀錄，計算後自動儲存</div>'; return; }
-  el.innerHTML = '<div class="history-list">' +
-    hist.map((h, idx) => {
-      const safeUrl = h.url.replace(/'/g, '%27');
-      return `<div class="history-item" onclick="restoreHistory('${safeUrl}')">
-        <div class="hi-meta">
-          <div class="hi-range">${h.rangeText}</div>
-          <div class="hi-detail">倍率 ${h.mult}x · ${formatExp(h.totalNet)} EXP</div>
-        </div>
-        <div class="hi-time">
-          <div class="hi-result">${h.minMult ? (formatDHM(h.minMult) || '—') : '—'}</div>
-          <div class="hi-ts">${formatTS(h.ts)}</div>
-        </div>
-        <button class="hi-del" onclick="event.stopPropagation();deleteHistoryItem(${idx})" title="刪除">✕</button>
-      </div>`;
-    }).join('') + '</div>';
-}
 
 // === EVENTS ===
 document.querySelectorAll('.mult-btn').forEach(btn => {
@@ -1148,6 +1265,7 @@ function calcExpRate() {
   hint.style.display = 'none';
 }
 
+
 function applyExpRate() {
   const before = parseExpVal(document.getElementById('expBefore').value);
   const after  = parseExpVal(document.getElementById('expAfter').value);
@@ -1171,6 +1289,140 @@ if ('Notification' in window && Notification.permission === 'default') {
   Notification.requestPermission();
 }
 
+// === FIREBASE ===
+const firebaseConfig = {
+  apiKey: "AIzaSyAqkKd1rbB_KXCfPLJpJ2UWTriaKIvj4pc",
+  authDomain: "maplestar-calc.firebaseapp.com",
+  projectId: "maplestar-calc",
+  storageBucket: "maplestar-calc.firebasestorage.app",
+  messagingSenderId: "300733998470",
+  appId: "1:300733998470:web:4d00507c758fee70a33807"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// === COMMUNITY ===
+let cmAllRecords = [];
+let cmFormOpen = false;
+
+function toggleCmForm() {
+  cmFormOpen = !cmFormOpen;
+  document.getElementById('cmForm').style.display = cmFormOpen ? '' : 'none';
+  document.getElementById('cmAddBtn').textContent = cmFormOpen ? '✕ 收起' : '＋ 新增紀錄';
+}
+
+async function submitCmRecord() {
+  const job   = document.getElementById('cmJob').value.trim();
+  const map   = document.getElementById('cmMap').value.trim();
+  const level = parseInt(document.getElementById('cmLevel').value);
+  const exp10 = parseExpVal(document.getElementById('cmExp').value);
+  const atkRaw = parseExpVal(document.getElementById('cmAtk').value);
+  const atk   = (!isNaN(atkRaw) && atkRaw > 0) ? Math.round(atkRaw) : 0;
+  const note  = document.getElementById('cmNote').value.trim();
+  const msg   = document.getElementById('cmMsg');
+
+  if (!job || !map || isNaN(level) || level < 1 || isNaN(exp10) || exp10 <= 0) {
+    msg.textContent = '請填寫所有必填欄位（*）'; msg.className = 'cm-msg err'; return;
+  }
+
+  const btn = document.querySelector('.cm-submit-btn');
+  btn.textContent = '送出中...'; btn.disabled = true;
+  msg.textContent = '';
+
+  try {
+    await db.collection('exp_records').add({
+      job, map, level, exp10: Math.round(exp10),
+      ...(atk > 0 && { atk }),
+      ...(note && { note }),
+      ts: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    msg.textContent = '✓ 已送出！感謝分享'; msg.className = 'cm-msg ok';
+    document.getElementById('cmJob').value = '';
+    document.getElementById('cmMap').value = '';
+    document.getElementById('cmLevel').value = '';
+    document.getElementById('cmExp').value = '';
+    document.getElementById('cmAtk').value = '';
+    document.getElementById('cmNote').value = '';
+    loadCmRecords();
+  } catch (e) {
+    msg.textContent = '送出失敗，請稍後再試'; msg.className = 'cm-msg err';
+  } finally {
+    btn.textContent = '送出'; btn.disabled = false;
+  }
+}
+
+async function loadCmRecords() {
+  try {
+    const snap = await db.collection('exp_records')
+      .orderBy('ts', 'desc').limit(200).get();
+    cmAllRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderCmRecords();
+  } catch (e) {
+    document.getElementById('cmList').innerHTML = '<div class="cm-empty">載入失敗，請重新整理頁面</div>';
+  }
+}
+
+function renderCmRecords() {
+  const fJob    = document.getElementById('cmFilterJob').value;
+  const fMap    = document.getElementById('cmFilterMap').value.trim().toLowerCase();
+  const fLvMin  = parseInt(document.getElementById('cmFilterLvMin').value) || 0;
+  const fLvMax  = parseInt(document.getElementById('cmFilterLvMax').value) || 999;
+
+  const filtered = cmAllRecords.filter(r =>
+    (!fJob || r.job === fJob) &&
+    (!fMap || r.map.toLowerCase().includes(fMap)) &&
+    r.level >= fLvMin && r.level <= fLvMax
+  );
+
+  const el = document.getElementById('cmList');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="cm-empty">沒有符合條件的紀錄</div>'; return;
+  }
+
+  el.innerHTML = '<div class="cm-grid">' + filtered.map(r => {
+    const tsText = r.ts?.toDate ? formatTS(r.ts.toDate().getTime()) : '—';
+    return `<div class="cm-card">
+      <div class="cm-card-head">
+        <div>
+          <div class="cm-job">${escHtml(r.job)}</div>
+          <div class="cm-map">📍 ${escHtml(r.map)}</div>
+        </div>
+      </div>
+      <div class="cm-stats">
+        <div class="cm-stat"><span>角色等級</span><span>Lv.${r.level}</span></div>
+        <div class="cm-stat"><span>EXP / 10分（未加倍）</span><span>${formatExp(r.exp10)}</span></div>
+        ${r.atk ? `<div class="cm-stat"><span>表攻</span><span>${r.atk.toLocaleString()}</span></div>` : ''}
+      </div>
+      ${r.note ? `<div class="cm-note">💬 ${escHtml(r.note)}</div>` : ''}
+      <div class="cm-footer">
+        <span class="cm-ts">${tsText}</span>
+        <button class="cm-apply-btn" onclick="applyCmRecord(${r.exp10})">套用到計算機</button>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function applyCmRecord(exp10) {
+  switchExpTab('per10min');
+  document.getElementById('expPer10Min').value = exp10;
+  calculate();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// === NAV ===
+function switchNav(page) {
+  const isCalc = page === 'calc';
+  document.getElementById('pageCalc').style.display = isCalc ? 'contents' : 'none';
+  document.getElementById('pageCm').style.display   = isCalc ? 'none' : 'flex';
+  document.getElementById('navCalc').classList.toggle('active', isCalc);
+  document.getElementById('navCm').classList.toggle('active', !isCalc);
+  if (!isCalc) loadCmRecords();
+}
+
 // === THEME ===
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
@@ -1184,8 +1436,8 @@ if (localStorage.getItem('maplecalc_theme') === 'light') {
   document.getElementById('themeToggle').textContent = '🌙 深色';
 }
 loadFromURL();
-renderHistory();
 calculate();
+loadCmRecords();
 </script>
 </body>
 </html>
