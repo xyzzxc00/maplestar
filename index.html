@@ -737,6 +737,7 @@
             <span id="expPer10MinResult">—</span>
           </div>
           <button class="exp-apply-btn" onclick="applyExpRate()">↑ 套用到計算機</button>
+          <button class="exp-apply-btn" style="margin-top:6px;background:#2a4a6a;border:1px solid rgba(80,160,255,0.3);color:#7ab8f5" onclick="applyToCommunity()">＋ 新增到社群資料庫</button>
         </div>
         <div class="exp-rate-hint" id="expRateHint">輸入前後經驗後自動計算速率</div>
       </div>
@@ -1297,6 +1298,22 @@ function calcExpRate() {
   hint.style.display = 'none';
 }
 
+
+function applyToCommunity() {
+  const before = parseExpVal(document.getElementById('expBefore').value);
+  const after  = parseExpVal(document.getElementById('expAfter').value);
+  if (isNaN(before) || isNaN(after) || after <= before) return;
+  const secs  = timerElapsed > 0 ? timerElapsed : timerTotal;
+  const per10 = Math.round((after - before) / secs * 60 * 10);
+
+  switchNav('cm');
+  if (!cmFormOpen) toggleCmForm();
+  document.getElementById('cmExp').value = per10;
+  setTimeout(() => {
+    document.getElementById('cmForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => document.getElementById('cmJob').focus(), 400);
+  }, 150);
+}
 
 function applyExpRate() {
   const before = parseExpVal(document.getElementById('expBefore').value);
