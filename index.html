@@ -576,9 +576,15 @@
           加倍卷排程
           <span class="optional">（選填）</span>
         </div>
-        <div class="field">
-          <label>每天打幾小時</label>
-          <input type="number" id="dailyHours" placeholder="例：3" min="0.5" max="24" step="0.5">
+        <div class="row">
+          <div class="field">
+            <label>每天打幾小時</label>
+            <input type="number" id="dailyHours" placeholder="例：3" min="0.5" max="24" step="0.5">
+          </div>
+          <div class="field">
+            <label>手上持有幾張</label>
+            <input type="number" id="ownedCoupons" placeholder="例：10" min="0" step="1">
+          </div>
         </div>
       </div>
     </div>
@@ -635,6 +641,18 @@
       <div class="stat-row">
         <span class="stat-label">全程加倍需要幾張</span>
         <span class="stat-value" style="color:#5dca82;font-size:1.05rem" id="couponsNeeded">—</span>
+      </div>
+      <div class="stat-row" id="couponStatusRow" style="display:none">
+        <span class="stat-label">持有卷是否足夠</span>
+        <span class="stat-value" id="couponStatus">—</span>
+      </div>
+      <div class="stat-row" id="couponShortRow" style="display:none">
+        <span class="stat-label">還需要再幾張才能全程加倍</span>
+        <span class="stat-value" style="color:#e8a020" id="couponShort">—</span>
+      </div>
+      <div class="stat-row" id="couponTimeRow" style="display:none">
+        <span class="stat-label">持有的卷可以打</span>
+        <span class="stat-value" id="couponTime">—</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">幾天能練完（加倍）</span>
@@ -1046,7 +1064,21 @@ function calculate() {
   setText('timeSaved', formatDHM(saved) || '—');
   setText('minNo',   Math.ceil(minNo).toLocaleString() + ' 分');
   setText('minMult', Math.ceil(minMult).toLocaleString() + ' 分');
-  setText('couponsNeeded', mult <= 1 ? '無需加倍卷' : Math.ceil(minMult / 30) + ' 張');
+  const couponsNeeded = mult <= 1 ? 0 : Math.ceil(minMult / 30);
+  setText('couponsNeeded', mult <= 1 ? '無需加倍卷' : couponsNeeded + ' 張');
+
+  const owned = parseInt(document.getElementById('ownedCoupons').value);
+  const hasOwned = !isNaN(owned) && owned >= 0 && mult > 1 && couponsNeeded > 0;
+  showEl('couponStatusRow', hasOwned);
+  showEl('couponShortRow', hasOwned && owned < couponsNeeded);
+  showEl('couponTimeRow', hasOwned);
+  if (hasOwned) {
+    const enough = owned >= couponsNeeded;
+    document.getElementById('couponStatus').textContent = enough ? '✅ 足夠' : '❌ 不足';
+    document.getElementById('couponStatus').style.color = enough ? '#5dca82' : '#cc4444';
+    if (!enough) setText('couponShort', (couponsNeeded - owned) + ' 張');
+    setText('couponTime', formatDHM(owned * 30) || '—');
+  }
 
   const dailyH = parseFloat(document.getElementById('dailyHours').value);
   const hasDaily = !isNaN(dailyH) && dailyH > 0;
@@ -1123,7 +1155,7 @@ document.getElementById('customMult').addEventListener('input', e => {
   document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
   calculate();
 });
-['fromLevel','toLevel','expPerMin','expPer10Min','currentPct','currentExp','dailyHours'].forEach(id => {
+['fromLevel','toLevel','expPerMin','expPer10Min','currentPct','currentExp','dailyHours','ownedCoupons'].forEach(id => {
   document.getElementById(id).addEventListener('input', calculate);
 });
 
