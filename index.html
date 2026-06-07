@@ -1172,8 +1172,9 @@ function timerSetPreset(min, btn) {
   document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('timerCustomMin').value = '';
-  timerTotal = min * 60;
-  timerLeft  = timerTotal;
+  timerTotal   = min * 60;
+  timerLeft    = timerTotal;
+  timerElapsed = 0;
   timerRenderStatic();
 }
 
@@ -1182,8 +1183,9 @@ function timerSetCustom() {
   const val = parseInt(document.getElementById('timerCustomMin').value);
   document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
   if (!val || val < 1) return;
-  timerTotal = val * 60;
-  timerLeft  = timerTotal;
+  timerTotal   = val * 60;
+  timerLeft    = timerTotal;
+  timerElapsed = 0;
   timerRenderStatic();
 }
 
@@ -1195,7 +1197,10 @@ function timerToggle() {
     document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-start';
     document.getElementById('timerLabel').textContent = '已暫停';
   } else {
-    if (timerLeft <= 0) timerLeft = timerTotal;
+    if (timerLeft <= 0) {
+      timerLeft    = timerTotal;
+      timerElapsed = 0;
+    }
     timerRunning = true;
     document.getElementById('timerStartBtn').textContent = '暫停';
     document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-pause';
