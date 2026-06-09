@@ -795,7 +795,10 @@
 
       <!-- 右：EXP 測速 -->
       <div class="exp-tracker">
-        <div class="section-label">EXP 測速</div>
+        <div class="section-label" style="display:flex;justify-content:space-between;align-items:center">
+          EXP 測速
+          <button onclick="clearExpTracker()" style="background:none;border:1px solid #484848;border-radius:6px;color:#666;padding:3px 10px;cursor:pointer;font-size:0.78rem;transition:all 0.15s" onmouseenter="this.style.color='#cc4444';this.style.borderColor='#664444'" onmouseleave="this.style.color='#666';this.style.borderColor='#484848'">✕ 清除</button>
+        </div>
         <div class="exp-tracker-fields">
           <div class="field">
             <label>測試前經驗值</label>
@@ -1493,6 +1496,13 @@ function calcExpRate() {
   hint.style.display = 'none';
 }
 
+
+function clearExpTracker() {
+  document.getElementById('expBefore').value = '';
+  document.getElementById('expAfter').value  = '';
+  document.getElementById('expRateBox').style.display  = 'none';
+  document.getElementById('expRateHint').style.display = '';
+}
 
 function applyToCommunity() {
   const before = parseExpVal(document.getElementById('expBefore').value);
