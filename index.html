@@ -569,7 +569,10 @@
       <div class="card-title">輸入設定</div>
 
       <div class="section">
-        <div class="section-label">等級範圍</div>
+        <div class="section-label" style="display:flex;justify-content:space-between;align-items:center">
+          等級範圍
+          <button id="royalModeBtn" onclick="toggleRoyalMode()" style="background:#333;border:1px solid #484848;border-radius:6px;color:#888;padding:4px 12px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.15s;white-space:nowrap">👑 皇家騎士團</button>
+        </div>
         <div class="row">
           <div class="field">
             <label>目前等級</label>
@@ -580,6 +583,9 @@
             <label>目標等級</label>
             <input type="number" id="toLevel" placeholder="例：135" min="2" max="200">
           </div>
+        </div>
+        <div id="royalModeNote" style="display:none;margin-top:8px;font-size:0.82rem;color:#e8a020;background:#2a2200;border:1px solid #554400;border-radius:6px;padding:7px 12px">
+          👑 皇家騎士團模式：每升等後自動獲得下一等 10% EXP，各等級所需時間已自動扣除｜上限 120 等
         </div>
       </div>
 
@@ -659,7 +665,7 @@
       </div>
 
       <div class="result-total">
-        <div class="r-label">剩餘所需經驗值</div>
+        <div class="r-label">剩餘所需經驗值 <span id="royalBadge" style="display:none;background:#554400;color:#e8a020;border-radius:4px;padding:1px 7px;font-size:0.75rem;margin-left:6px">👑 皇家</span></div>
         <div class="r-value" id="totalExp"><span class="empty">請輸入等級範圍</span></div>
         <div class="r-sub" id="levelRange"></div>
       </div>
@@ -731,7 +737,10 @@
   <div class="full-card">
     <div class="card-title">
       多段練等計算
-      <button class="multi-add-btn" onclick="addMultiRow()">＋ 新增一段</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span id="multiRoyalNote" style="display:none;background:#554400;color:#e8a020;border-radius:4px;padding:2px 10px;font-size:0.78rem;font-weight:600">👑 皇家模式 上限120等 各等-10%</span>
+        <button class="multi-add-btn" onclick="addMultiRow()">＋ 新增一段</button>
+      </div>
     </div>
     <div id="multiCalcRows"></div>
     <div class="multi-total-bar">
@@ -984,6 +993,38 @@ let currentMult = 2;
 let progressTab = 'pct';
 let expTab = 'per10min';
 let breakdownOpen = false;
+let royalMode = false;
+
+// === ROYAL MODE ===
+function toggleRoyalMode() {
+  royalMode = !royalMode;
+  const btn    = document.getElementById('royalModeBtn');
+  const note   = document.getElementById('royalModeNote');
+  const badge  = document.getElementById('royalBadge');
+  const toLvEl = document.getElementById('toLevel');
+  btn.style.background    = royalMode ? '#554400' : '#333';
+  btn.style.borderColor   = royalMode ? '#aa8800' : '#484848';
+  btn.style.color         = royalMode ? '#e8a020' : '#888';
+  note.style.display      = royalMode ? '' : 'none';
+  badge.style.display     = royalMode ? '' : 'none';
+  toLvEl.max              = royalMode ? 120 : 200;
+  toLvEl.placeholder      = royalMode ? '最高 120' : '例：135';
+  if (royalMode && parseInt(toLvEl.value) > 120) toLvEl.value = 120;
+  const multiNote = document.getElementById('multiRoyalNote');
+  if (multiNote) multiNote.style.display = royalMode ? '' : 'none';
+  calculate();
+  calcMultiAll();
+}
+
+function getRoyalTotal(from, to, alreadyExp) {
+  // 當前等級：照正常剩餘計算（已在此等級，10%已給）
+  let total = (EXP_TABLE[from] || 0) - alreadyExp;
+  // 之後每個等級：只需補 90%（升等後自動給 10%）
+  for (let lv = from + 1; lv < to; lv++) {
+    total += (EXP_TABLE[lv] || 0) * 0.9;
+  }
+  return Math.max(0, total);
+}
 
 // === HELPERS ===
 function formatExp(n) {
@@ -1055,7 +1096,12 @@ function renderBreakdownTable(from, to, alreadyExp, epm, mult) {
   let rows = '';
   for (let lv = from; lv < to; lv++) {
     const full = EXP_TABLE[lv] || 0;
-    const exp  = (lv === from && alreadyExp > 0) ? full - alreadyExp : full;
+    let exp;
+    if (lv === from) {
+      exp = alreadyExp > 0 ? full - alreadyExp : (royalMode ? full : full);
+    } else {
+      exp = royalMode ? full * 0.9 : full;
+    }
     const mNo   = epm > 0 ? exp / epm : 0;
     const mMult = epm > 0 ? exp / (epm * mult) : 0;
     rows += `<tr>
@@ -1107,6 +1153,10 @@ function calculate() {
     setHTML('totalExp', '<span class="empty">最高支援至 200 等</span>');
     setText('levelRange', ''); return;
   }
+  if (royalMode && to > 120) {
+    setHTML('totalExp', '<span class="empty">皇家騎士團最高 120 等</span>');
+    setText('levelRange', ''); return;
+  }
 
   // Progress
   const levelExpNeeded = EXP_TABLE[from] || 0;
@@ -1119,10 +1169,13 @@ function calculate() {
     if (!isNaN(owned) && owned > 0) alreadyExp = Math.min(owned, levelExpNeeded);
   }
 
-  const total = getTotalExp(from, to) - alreadyExp;
+  const total = royalMode
+    ? getRoyalTotal(from, to, alreadyExp)
+    : getTotalExp(from, to) - alreadyExp;
   const progressNote = alreadyExp > 0 ? '，已扣除進度' : '';
+  const royalNote    = royalMode ? '，皇家 -10%/等' : '';
   setHTML('totalExp', formatExp(total));
-  setText('levelRange', `Lv.${from} → Lv.${to}（${to - from} 等${progressNote}）`);
+  setText('levelRange', `Lv.${from} → Lv.${to}（${to - from} 等${progressNote}${royalNote}）`);
 
   showEl('breakdownCard', true);
   renderBreakdownTable(from, to, alreadyExp, hasEpm ? epm : 0, mult);
@@ -1237,6 +1290,13 @@ function updateMultiDelBtns() {
   });
 }
 
+function getMultiSegExp(from, to) {
+  if (!royalMode) return getTotalExp(from, to);
+  let total = 0;
+  for (let lv = from; lv < to; lv++) total += (EXP_TABLE[lv] || 0) * 0.9;
+  return total;
+}
+
 function calcMultiRow(id) {
   const row = document.getElementById('mrow-' + id);
   if (!row) return;
@@ -1246,13 +1306,14 @@ function calcMultiRow(id) {
   const epm  = parseExpVal(inputs[2].value) / 10;
   const r1   = document.getElementById('mres1-' + id);
   const r2   = document.getElementById('mres2-' + id);
-  if (!isNaN(from) && !isNaN(to) && from >= 1 && to <= 200 && from < to && !isNaN(epm) && epm > 0) {
-    const total = getTotalExp(from, to);
+  const maxLv = royalMode ? 120 : 200;
+  if (!isNaN(from) && !isNaN(to) && from >= 1 && to <= maxLv && from < to && !isNaN(epm) && epm > 0) {
+    const total = getMultiSegExp(from, to);
     r1.textContent = formatDHM(total / epm) || '—';
     r2.textContent = formatDHM(total / (epm * currentMult)) || '—';
   } else {
-    r1.textContent = '—';
-    r2.textContent = '—';
+    r1.textContent = to > maxLv ? `上限${maxLv}等` : '—';
+    r2.textContent = to > maxLv ? `上限${maxLv}等` : '—';
   }
   calcMultiTotal();
 }
@@ -1267,13 +1328,14 @@ function calcMultiAll() {
 
 function calcMultiTotal() {
   let totalNo = 0, totalMult = 0, valid = 0;
+  const maxLv = royalMode ? 120 : 200;
   document.querySelectorAll('.multi-row').forEach(row => {
     const inputs = row.querySelectorAll('input');
     const from = parseInt(inputs[0].value);
     const to   = parseInt(inputs[1].value);
     const epm  = parseExpVal(inputs[2].value) / 10;
-    if (!isNaN(from) && !isNaN(to) && from >= 1 && to <= 200 && from < to && !isNaN(epm) && epm > 0) {
-      const total = getTotalExp(from, to);
+    if (!isNaN(from) && !isNaN(to) && from >= 1 && to <= maxLv && from < to && !isNaN(epm) && epm > 0) {
+      const total = getMultiSegExp(from, to);
       totalNo   += total / epm;
       totalMult += total / (epm * currentMult);
       valid++;
