@@ -260,7 +260,85 @@
   .exp-apply-btn:hover { background: #3a9a5c; }
   .exp-rate-hint { color: #555; font-size: 0.85rem; }
 
-  @media (max-width: 700px) {
+
+  .note { font-size: 0.78rem; color: #444; text-align: center; margin-top: 10px; }
+  .empty { color: #444; font-size: 1rem; }
+
+  /* Multi-level calc */
+  .multi-row {
+    display: flex; gap: 10px; align-items: flex-end;
+    padding: 12px 0; border-bottom: 1px solid #2e2e2e;
+  }
+  .multi-row:last-child { border-bottom: none; }
+  .multi-lv { flex: 0 0 80px !important; }
+  .multi-exp-col { flex: 2 !important; }
+  .multi-arr { font-size: 1.2rem; color: #4a8a60; flex-shrink: 0; padding-bottom: 11px; }
+  .multi-res-col { flex: 1; text-align: center; }
+  .multi-res-label { font-size: 0.75rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .multi-res-val { font-size: 1rem; font-weight: 700; color: #f0f0f0; background: #333; border-radius: 6px; padding: 9px 10px; }
+  .multi-res-val.hl { color: #5dca82; background: #263326; }
+  .multi-del {
+    background: none; border: none; color: #554040; cursor: pointer;
+    font-size: 0.9rem; padding: 6px 8px; border-radius: 4px;
+    transition: color 0.15s; flex-shrink: 0; margin-bottom: 2px;
+  }
+  .multi-del:hover { color: #cc4444; }
+  .multi-total-bar {
+    display: flex; gap: 10px; align-items: stretch;
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid #383838;
+  }
+  .multi-total-box {
+    background: #333; border: 1px solid rgba(80,200,120,0.15);
+    border-radius: 10px; padding: 16px 36px; text-align: center;
+  }
+  .multi-total-box.hl { background: #263326; border-color: rgba(80,200,120,0.5); }
+  .multi-total-box .mtb-label { font-size: 0.82rem; color: #5ab87a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .multi-total-box .mtb-val { font-size: 1.4rem; font-weight: 700; color: #f0f0f0; }
+  .multi-total-box.hl .mtb-val { color: #5dca82; }
+  .multi-add-btn {
+    background: #2e3d32; border: 1px solid rgba(80,200,120,0.3);
+    border-radius: 8px; color: #5ab87a; padding: 7px 16px;
+    cursor: pointer; font-size: 0.88rem; font-weight: 600;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .multi-add-btn:hover { background: #344a3a; color: #5dca82; }
+  /* ── Mobile ── */
+  @media (max-width: 760px) {
+    body { padding: 14px 12px; gap: 12px; }
+    h1 { font-size: 1.5rem; }
+    .layout { flex-direction: column; gap: 12px; }
+    .card { padding: 20px 16px; width: 100%; }
+    .full-card { padding: 20px 16px; }
+    .card-title { font-size: 0.88rem; flex-wrap: wrap; gap: 8px; }
+    .result-total .r-value { font-size: 1.5rem; }
+    .time-box .r-main { font-size: 1.05rem; }
+    .time-box.highlight .r-main { font-size: 1.2rem; }
+    .stat-row { font-size: 0.88rem; }
+    .mult-btn { padding: 8px 10px; font-size: 0.9rem; }
+    input[type="number"], input[type="text"], select { font-size: 0.95rem; padding: 9px 11px; }
+    label { font-size: 0.82rem; }
+    .breakdown-table th, .breakdown-table td { padding: 7px 10px; font-size: 0.82rem; }
+
+    /* 多段計算 */
+    .multi-row { flex-wrap: wrap; gap: 8px; }
+    .multi-lv { flex: 1 !important; min-width: 70px; max-width: 130px; }
+    .multi-exp-col { flex: 1 1 100% !important; order: 3; }
+    .multi-res-col { flex: 1 !important; order: 4; min-width: 100px; }
+    .multi-del { order: 2; align-self: flex-end; margin-bottom: 4px; }
+    .multi-spacer { display: none !important; }
+    .multi-total-bar { flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .multi-total-bar .multi-res-col { flex: 1; min-width: 130px; }
+    .multi-total-box { padding: 12px 16px; }
+
+    /* 社群資料庫 */
+    .cm-top { flex-direction: column; align-items: stretch; }
+    .cm-filter-row { flex-wrap: wrap; }
+    .cm-filter-input { flex: 1; min-width: 120px; }
+    .cm-add-btn { width: 100%; text-align: center; padding: 10px; }
+    .cm-form-grid { grid-template-columns: 1fr 1fr; }
+    .cm-form-row { grid-template-columns: 1fr; }
+
+    /* 計時器 */
     .timer-layout { flex-direction: column; gap: 20px; width: 100%; }
     .timer-sep { width: 100%; height: 1px; order: 2; }
     .timer-panel { width: 100%; order: 3; flex-shrink: 0; }
@@ -273,32 +351,16 @@
     .exp-rate-box { width: 100%; }
   }
 
-  .note { font-size: 0.78rem; color: #444; text-align: center; margin-top: 10px; }
-  .empty { color: #444; font-size: 1rem; }
-
-  /* ── Mobile ── */
-  @media (max-width: 760px) {
-    body { padding: 14px 12px; gap: 12px; }
-    h1 { font-size: 1.5rem; }
-    .layout { flex-direction: column; gap: 12px; }
-    .card { padding: 20px 16px; width: 100%; }
-    .full-card { padding: 20px 16px; }
-    .card-title { font-size: 0.88rem; flex-wrap: wrap; }
-    .result-total .r-value { font-size: 1.5rem; }
-    .time-box .r-main { font-size: 1.05rem; }
-    .stat-row { font-size: 0.88rem; }
-    .info-stat { font-size: 0.88rem; }
-    .breakdown-table th, .breakdown-table td { padding: 7px 10px; font-size: 0.82rem; }
-    .history-item { padding: 10px 12px; gap: 8px; }
-    .hi-range { font-size: 0.88rem; }
-    .hi-result { font-size: 0.88rem; }
-    .mult-btn { padding: 8px 10px; font-size: 0.9rem; }
-    input[type="number"], input[type="text"] { font-size: 0.95rem; padding: 9px 11px; }
-    label { font-size: 0.82rem; }
+  @media (max-width: 560px) {
+    .cm-form-grid { grid-template-columns: 1fr; }
+    .time-grid { grid-template-columns: 1fr 1fr; }
+    .multi-res-val { font-size: 0.88rem; padding: 7px 6px; }
   }
+
   @media (max-width: 400px) {
     .time-grid { grid-template-columns: 1fr; }
     .share-btn span { display: none; }
+    .nav-tab { padding: 10px 16px; font-size: 0.85rem; }
   }
 
   /* Page wrappers */
@@ -665,6 +727,32 @@
     </div>
   </div>
 
+  <!-- 多段練等計算 -->
+  <div class="full-card">
+    <div class="card-title">
+      多段練等計算
+      <button class="multi-add-btn" onclick="addMultiRow()">＋ 新增一段</button>
+    </div>
+    <div id="multiCalcRows"></div>
+    <div class="multi-total-bar">
+      <div class="multi-spacer" style="flex:0 0 80px"></div>
+      <div class="multi-spacer" style="flex-shrink:0;width:20px"></div>
+      <div class="multi-spacer" style="flex:0 0 80px"></div>
+      <div class="multi-exp-col multi-spacer" style="display:flex;align-items:center">
+        <span style="font-size:0.82rem;color:#555">各段套用相同倍率設定</span>
+      </div>
+      <div class="multi-res-col multi-total-box">
+        <div class="mtb-label">合計 1x</div>
+        <div class="mtb-val" id="multiTotal1">—</div>
+      </div>
+      <div class="multi-res-col multi-total-box hl">
+        <div class="mtb-label">合計 ⚡<span id="multiTotalMultLabel">2</span>x</div>
+        <div class="mtb-val" id="multiTotal2">—</div>
+      </div>
+      <div class="multi-spacer" style="flex-shrink:0;width:30px"></div>
+    </div>
+  </div>
+
   <!-- 倒數計時器 + EXP 測速 -->
   <div class="full-card">
     <div class="card-title">倒數計時器 &amp; EXP 測速</div>
@@ -782,8 +870,8 @@
           <optgroup label="劍士系"><option>英雄</option><option>黑騎士</option><option>聖騎士</option><option>劍豪</option><option>惡魔殺手</option></optgroup>
           <optgroup label="弓箭手系"><option>箭神</option><option>神射手</option><option>狂豹獵人</option><option>精靈遊俠</option></optgroup>
           <optgroup label="法師系"><option>大魔導士（冰／雷）</option><option>大魔導士（火／毒）</option><option>主教</option><option>煉獄巫師</option><option>龍魔導士</option><option>陰陽師</option></optgroup>
-          <optgroup label="盜賊系"><option>夜使者</option><option>夜行者</option><option>影武者</option></optgroup>
-          <optgroup label="海盜與其他"><option>拳霸</option><option>重炮指揮官</option><option>機甲戰神</option></optgroup>
+          <optgroup label="盜賊系"><option>夜使者</option><option>夜行者</option><option>影武者</option><option>幻影俠盜</option></optgroup>
+          <optgroup label="海盜系"><option>拳霸</option><option>重炮指揮官</option><option>機甲戰神</option></optgroup>
           <optgroup label="皇家騎士團"><option>聖魂劍士</option><option>烈焰巫師</option><option>破風使者</option><option>暗夜行者</option><option>閃雷悍將</option></optgroup>
         </select>
         <input class="cm-filter-input" id="cmFilterMap" placeholder="🔍 篩選地圖" oninput="renderCmRecords()">
@@ -1094,6 +1182,104 @@ function calculate() {
 
 }
 
+// === MULTI-LEVEL CALC ===
+let multiRowCounter = 0;
+
+function addMultiRow() {
+  multiRowCounter++;
+  const id = multiRowCounter;
+  const div = document.createElement('div');
+  div.className = 'multi-row';
+  div.id = 'mrow-' + id;
+  div.innerHTML = `
+    <div class="field multi-lv">
+      <label>起始等級</label>
+      <input type="number" placeholder="120" min="1" max="199" oninput="calcMultiRow(${id})">
+    </div>
+    <div class="multi-arr">→</div>
+    <div class="field multi-lv">
+      <label>目標等級</label>
+      <input type="number" placeholder="140" min="2" max="200" oninput="calcMultiRow(${id})">
+    </div>
+    <div class="field multi-exp-col">
+      <label>EXP / 10分（未加倍）</label>
+      <input type="text" placeholder="例：185W" inputmode="decimal" oninput="calcMultiRow(${id})">
+    </div>
+    <div class="multi-res-col">
+      <div class="multi-res-label">1x</div>
+      <div class="multi-res-val" id="mres1-${id}">—</div>
+    </div>
+    <div class="multi-res-col">
+      <div class="multi-res-label">⚡ <span class="multi-mult-lbl">${currentMult}</span>x</div>
+      <div class="multi-res-val hl" id="mres2-${id}">—</div>
+    </div>
+    <button class="multi-del" onclick="removeMultiRow(${id})">✕</button>
+  `;
+  document.getElementById('multiCalcRows').appendChild(div);
+  updateMultiDelBtns();
+}
+
+function removeMultiRow(id) {
+  const el = document.getElementById('mrow-' + id);
+  if (el) el.remove();
+  updateMultiDelBtns();
+  calcMultiTotal();
+}
+
+function updateMultiDelBtns() {
+  const rows = document.querySelectorAll('.multi-row');
+  rows.forEach(r => {
+    const btn = r.querySelector('.multi-del');
+    if (btn) btn.style.visibility = rows.length <= 1 ? 'hidden' : 'visible';
+  });
+}
+
+function calcMultiRow(id) {
+  const row = document.getElementById('mrow-' + id);
+  if (!row) return;
+  const inputs = row.querySelectorAll('input');
+  const from = parseInt(inputs[0].value);
+  const to   = parseInt(inputs[1].value);
+  const epm  = parseExpVal(inputs[2].value) / 10;
+  const r1   = document.getElementById('mres1-' + id);
+  const r2   = document.getElementById('mres2-' + id);
+  if (!isNaN(from) && !isNaN(to) && from >= 1 && to <= 200 && from < to && !isNaN(epm) && epm > 0) {
+    const total = getTotalExp(from, to);
+    r1.textContent = formatDHM(total / epm) || '—';
+    r2.textContent = formatDHM(total / (epm * currentMult)) || '—';
+  } else {
+    r1.textContent = '—';
+    r2.textContent = '—';
+  }
+  calcMultiTotal();
+}
+
+function calcMultiAll() {
+  document.querySelectorAll('.multi-mult-lbl').forEach(el => el.textContent = currentMult);
+  document.getElementById('multiTotalMultLabel').textContent = currentMult;
+  document.querySelectorAll('.multi-row').forEach(row => {
+    calcMultiRow(parseInt(row.id.replace('mrow-', '')));
+  });
+}
+
+function calcMultiTotal() {
+  let totalNo = 0, totalMult = 0, valid = 0;
+  document.querySelectorAll('.multi-row').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const from = parseInt(inputs[0].value);
+    const to   = parseInt(inputs[1].value);
+    const epm  = parseExpVal(inputs[2].value) / 10;
+    if (!isNaN(from) && !isNaN(to) && from >= 1 && to <= 200 && from < to && !isNaN(epm) && epm > 0) {
+      const total = getTotalExp(from, to);
+      totalNo   += total / epm;
+      totalMult += total / (epm * currentMult);
+      valid++;
+    }
+  });
+  document.getElementById('multiTotal1').textContent = valid ? (formatDHM(totalNo)   || '—') : '—';
+  document.getElementById('multiTotal2').textContent = valid ? (formatDHM(totalMult) || '—') : '—';
+}
+
 // === SHARE URL ===
 function buildParams() {
   const p = new URLSearchParams();
@@ -1106,7 +1292,8 @@ function buildParams() {
   p.set('epm',   document.getElementById('expPerMin').value   || '');
   p.set('ep10',  document.getElementById('expPer10Min').value || '');
   p.set('mult',  currentMult);
-  p.set('daily', document.getElementById('dailyHours').value  || '');
+  p.set('daily', document.getElementById('dailyHours').value   || '');
+  p.set('owned', document.getElementById('ownedCoupons').value || '');
   return p;
 }
 function shareURL() {
@@ -1137,7 +1324,8 @@ function loadFromURL() {
     document.querySelectorAll('.mult-btn').forEach(b =>
       b.classList.toggle('active', parseFloat(b.dataset.val) === currentMult));
   }
-  if (p.get('daily')) document.getElementById('dailyHours').value = p.get('daily');
+  if (p.get('daily')) document.getElementById('dailyHours').value   = p.get('daily');
+  if (p.get('owned')) document.getElementById('ownedCoupons').value = p.get('owned');
 }
 
 
@@ -1149,12 +1337,14 @@ document.querySelectorAll('.mult-btn').forEach(btn => {
     document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     calculate();
+    calcMultiAll();
   });
 });
 document.getElementById('customMult').addEventListener('input', e => {
   currentMult = parseFloat(e.target.value) || 1;
   document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
   calculate();
+  calcMultiAll();
 });
 ['fromLevel','toLevel','expPerMin','expPer10Min','currentPct','currentExp','dailyHours','ownedCoupons'].forEach(id => {
   document.getElementById(id).addEventListener('input', calculate);
@@ -1497,6 +1687,7 @@ if (localStorage.getItem('maplecalc_theme') === 'light') {
 }
 loadFromURL();
 calculate();
+addMultiRow();
 const _savedNav = localStorage.getItem('maplecalc_nav');
 if (_savedNav === 'cm') switchNav('cm'); else loadCmRecords();
 </script>
