@@ -1027,13 +1027,16 @@ function toggleRoyalMode() {
 }
 
 function getRoyalTotal(from, to, alreadyExp) {
-  // 當前等級：照正常剩餘計算（已在此等級，10%已給）
-  let total = (EXP_TABLE[from] || 0) - alreadyExp;
-  // 之後每個等級：只需補 90%（升等後自動給 10%）
+  const fromFull = EXP_TABLE[from] || 0;
+  // 有填進度 → 直接用當下數值計算剩餘；沒填 → 假設從 10% 開始剩 90%
+  let total = alreadyExp > 0
+    ? Math.max(0, fromFull - alreadyExp)
+    : fromFull * 0.9;
+  // 之後每個等級：升等後自動得 10%，只需 90%
   for (let lv = from + 1; lv < to; lv++) {
     total += (EXP_TABLE[lv] || 0) * 0.9;
   }
-  return Math.max(0, total);
+  return total;
 }
 
 // === HELPERS ===
@@ -1108,7 +1111,11 @@ function renderBreakdownTable(from, to, alreadyExp, epm, mult) {
     const full = EXP_TABLE[lv] || 0;
     let exp;
     if (lv === from) {
-      exp = alreadyExp > 0 ? full - alreadyExp : (royalMode ? full : full);
+      if (royalMode) {
+        exp = alreadyExp > 0 ? Math.max(0, full - alreadyExp) : full * 0.9;
+      } else {
+        exp = alreadyExp > 0 ? full - alreadyExp : full;
+      }
     } else {
       exp = royalMode ? full * 0.9 : full;
     }
