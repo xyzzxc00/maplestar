@@ -448,12 +448,6 @@
   .cm-note { font-size: 0.8rem; color: #666; font-style: italic; border-top: 1px solid #3a3a3a; padding-top: 6px; }
   .cm-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
   .cm-ts { font-size: 0.75rem; color: #555; }
-  .cm-apply-btn {
-    background: #2e3d32; border: 1px solid rgba(80,200,120,0.3); border-radius: 6px;
-    color: #5ab87a; padding: 5px 12px; cursor: pointer; font-size: 0.8rem;
-    transition: all 0.15s;
-  }
-  .cm-apply-btn:hover { background: #344a3a; color: #5dca82; }
   .cm-empty { color: #555; text-align: center; padding: 32px 0; font-size: 0.95rem; }
   .cm-loading { color: #555; text-align: center; padding: 32px 0; font-size: 0.95rem; }
 
@@ -468,7 +462,6 @@
   body.light .cm-stat span:last-child  { color: #1a1a1a; }
   body.light .cm-note { color: #999; border-top-color: #e0e0e0; }
   body.light .cm-ts { color: #bbb; }
-  body.light .cm-apply-btn { background: #eaf5ef; color: #1a7a40; }
   body.light .cm-empty, body.light .cm-loading { color: #bbb; }
 
   @media (max-width: 900px) { .cm-grid { grid-template-columns: 1fr 1fr; } }
@@ -1732,13 +1725,6 @@ function renderCmRecords() {
       </div>
     </div>`;
   }).join('') + '</div>';
-}
-
-function applyCmRecord(exp10) {
-  switchExpTab('per10min');
-  document.getElementById('expPer10Min').value = exp10;
-  calculate();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function formatTS(ts) {
