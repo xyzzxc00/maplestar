@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /exp_records/{doc} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.keys().hasOnly(['job','map','level','exp10','atk','note','ts']) &&
+        request.resource.data.job is string &&
+        request.resource.data.job.size() > 0 && request.resource.data.job.size() < 30 &&
+        request.resource.data.map is string &&
+        request.resource.data.map.size() > 0 && request.resource.data.map.size() < 100 &&
+        request.resource.data.level is number &&
+        request.resource.data.level > 0 && request.resource.data.level <= 300 &&
+        request.resource.data.exp10 is number &&
+        request.resource.data.exp10 > 0 && request.resource.data.exp10 < 1000000000000 &&
+        (!('atk' in request.resource.data) || (request.resource.data.atk is number && request.resource.data.atk >= 0)) &&
+        (!('note' in request.resource.data) || (request.resource.data.note is string && request.resource.data.note.size() < 200));
+      allow update, delete: if false;
+    }
+  }
+}
