@@ -15,8 +15,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e1e1e'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e1e1e'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" id="themeColorMeta" content="#1e1e1e">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link rel="manifest" href="manifest.json">
+<link rel="canonical" href="https://xyzzxc00.github.io/maplestar/">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -907,7 +907,7 @@
 
     <div class="cm-top">
       <div class="cm-filter-row">
-        <select class="cm-filter-input" id="cmFilterJob" onchange="renderCmRecords()" style="min-width:120px">
+        <select class="cm-filter-input" id="cmFilterJob" aria-label="篩選職業" onchange="renderCmRecords()" style="min-width:120px">
           <option value="">全部職業</option>
           <optgroup label="劍士系"><option>英雄</option><option>黑騎士</option><option>聖騎士</option><option>劍豪</option><option>惡魔殺手</option></optgroup>
           <optgroup label="弓箭手系"><option>箭神</option><option>神射手</option><option>狂豹獵人</option><option>精靈遊俠</option></optgroup>
@@ -916,10 +916,10 @@
           <optgroup label="海盜系"><option>拳霸</option><option>重炮指揮官</option><option>機甲戰神</option></optgroup>
           <optgroup label="皇家騎士團"><option>聖魂劍士</option><option>烈焰巫師</option><option>破風使者</option><option>暗夜行者</option><option>閃雷悍將</option></optgroup>
         </select>
-        <input class="cm-filter-input" id="cmFilterMap" placeholder="🔍 篩選地圖" oninput="renderCmRecords()">
-        <input class="cm-filter-input" id="cmFilterLvMin" type="number" placeholder="最低等級" min="1" max="200" style="width:90px" oninput="renderCmRecords()">
+        <input class="cm-filter-input" id="cmFilterMap" aria-label="篩選地圖" placeholder="🔍 篩選地圖" oninput="renderCmRecords()">
+        <input class="cm-filter-input" id="cmFilterLvMin" type="number" aria-label="最低等級" placeholder="最低等級" min="1" max="200" style="width:90px" oninput="renderCmRecords()">
         <span style="color:#555;font-size:0.85rem">~</span>
-        <input class="cm-filter-input" id="cmFilterLvMax" type="number" placeholder="最高等級" min="1" max="200" style="width:90px" oninput="renderCmRecords()">
+        <input class="cm-filter-input" id="cmFilterLvMax" type="number" aria-label="最高等級" placeholder="最高等級" min="1" max="200" style="width:90px" oninput="renderCmRecords()">
       </div>
       <button class="cm-add-btn" id="cmAddBtn" onclick="toggleCmForm()">＋ 新增紀錄</button>
     </div>
@@ -990,6 +990,8 @@
 
   </div><!-- /pageCm -->
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 // === EXP TABLE ===
 const EXP_TABLE = [];
