@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>楓星升等計算器</title>
+<meta name="description" content="楓之谷練等經驗計算機：輸入等級、經驗速率、加倍倍率，算出升等所需經驗與時間，支援皇家騎士團模式、多段練等計算、加倍卷排程與社群經驗資料庫。">
+<meta property="og:title" content="⚔ 楓星升等計算器">
+<meta property="og:description" content="楓之谷練等經驗計算機：算出升等所需經驗與時間，支援皇家騎士團模式、多段練等計算、加倍卷排程與社群經驗資料庫。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="⚔ 楓星升等計算器">
+<meta name="twitter:description" content="楓之谷練等經驗計算機，支援皇家騎士團模式、多段練等計算、加倍卷排程與社群經驗資料庫。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e1e1e'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
@@ -592,12 +601,12 @@
         </div>
         <div class="row">
           <div class="field">
-            <label>目前等級</label>
+            <label for="fromLevel">目前等級</label>
             <input type="number" id="fromLevel" placeholder="例：126" min="1" max="199">
           </div>
           <div class="arrow">→</div>
           <div class="field">
-            <label>目標等級</label>
+            <label for="toLevel">目標等級</label>
             <input type="number" id="toLevel" placeholder="例：135" min="2" max="200">
           </div>
         </div>
@@ -616,11 +625,11 @@
           <button class="toggle-tab" id="tab-exp" onclick="switchProgressTab('exp')">EXP 數值</button>
         </div>
         <div id="progress-pct" class="field">
-          <label>目前已有 % （0 ~ 99.99）</label>
+          <label for="currentPct">目前已有 % （0 ~ 99.99）</label>
           <input type="number" id="currentPct" placeholder="例：4.70" min="0" max="99.99" step="0.01">
         </div>
         <div id="progress-exp" class="field" style="display:none">
-          <label>目前已有 EXP 數值</label>
+          <label for="currentExp">目前已有 EXP 數值</label>
           <input type="number" id="currentExp" placeholder="例：1540592" min="0">
         </div>
       </div>
@@ -632,11 +641,11 @@
           <button class="toggle-tab active" id="tab-per10min" onclick="switchExpTab('per10min')">每10分鐘</button>
         </div>
         <div id="exp-permin" class="field" style="display:none">
-          <label>EXP / 分鐘（未加倍）　可用 W 代替萬，如 18.5W</label>
+          <label for="expPerMin">EXP / 分鐘（未加倍）　可用 W 代替萬，如 18.5W</label>
           <input type="text" id="expPerMin" placeholder="例：18.5W 或 185000" inputmode="decimal">
         </div>
         <div id="exp-per10min" class="field">
-          <label>EXP / 10分鐘（未加倍）　可用 W 代替萬，如 185W</label>
+          <label for="expPer10Min">EXP / 10分鐘（未加倍）　可用 W 代替萬，如 185W</label>
           <input type="text" id="expPer10Min" placeholder="例：185W 或 1850000" inputmode="decimal">
         </div>
       </div>
@@ -651,7 +660,7 @@
           <button class="mult-btn" data-val="4">4x</button>
         </div>
         <div class="field">
-          <label>自訂倍率</label>
+          <label for="customMult">自訂倍率</label>
           <input type="number" id="customMult" value="2" min="1" step="0.5">
         </div>
       </div>
@@ -663,11 +672,11 @@
         </div>
         <div class="row">
           <div class="field">
-            <label>每天打幾小時</label>
+            <label for="dailyHours">每天打幾小時</label>
             <input type="number" id="dailyHours" placeholder="例：3" min="0.5" max="24" step="0.5">
           </div>
           <div class="field">
-            <label>手上持有幾張</label>
+            <label for="ownedCoupons">手上持有幾張</label>
             <input type="number" id="ownedCoupons" placeholder="例：10" min="0" step="1">
           </div>
         </div>
@@ -793,7 +802,7 @@
             <button class="timer-preset" data-min="10" onclick="timerSetPreset(10, this)">10 分鐘</button>
             <div class="timer-custom-row">
               <input type="number" id="timerCustomMin" placeholder="分" min="1" max="999" oninput="timerSetCustom()">
-              <label>分鐘</label>
+              <label for="timerCustomMin">分鐘</label>
             </div>
           </div>
 
@@ -827,11 +836,11 @@
         </div>
         <div class="exp-tracker-fields">
           <div class="field">
-            <label>測試前經驗值</label>
+            <label for="expBefore">測試前經驗值</label>
             <input type="text" id="expBefore" placeholder="例：185W 或 1850000" inputmode="decimal" oninput="calcExpRate()">
           </div>
           <div class="field">
-            <label>測試後經驗值</label>
+            <label for="expAfter">測試後經驗值</label>
             <input type="text" id="expAfter" placeholder="例：200W 或 2000000" inputmode="decimal" oninput="calcExpRate()">
           </div>
         </div>
@@ -915,7 +924,7 @@
       <div class="cm-form">
         <div class="cm-form-grid">
           <div class="field">
-            <label>職業 *</label>
+            <label for="cmJob">職業 *</label>
             <select id="cmJob">
               <option value="" disabled selected>請選擇職業</option>
               <optgroup label="劍士系">
@@ -940,27 +949,27 @@
             </select>
           </div>
           <div class="field">
-            <label>地圖名稱（怪物）*</label>
+            <label for="cmMap">地圖名稱（怪物）*</label>
             <input type="text" id="cmMap" placeholder="例：被遺忘的時間路（時間的守護者）">
           </div>
           <div class="field">
-            <label>角色等級 *</label>
+            <label for="cmLevel">角色等級 *</label>
             <input type="number" id="cmLevel" placeholder="例：135" min="1" max="300">
           </div>
         </div>
         <div class="cm-form-row">
           <div class="field">
-            <label>EXP / 10分鐘（未加倍）*　支援 W</label>
+            <label for="cmExp">EXP / 10分鐘（未加倍）*　支援 W</label>
             <input type="text" id="cmExp" placeholder="例：185W 或 1850000" inputmode="decimal">
           </div>
           <div class="field">
-            <label>表攻（選填）　支援 W</label>
+            <label for="cmAtk">表攻（選填）　支援 W</label>
             <input type="text" id="cmAtk" placeholder="例：3.5W 或 35000" inputmode="decimal">
           </div>
         </div>
         <div class="cm-form-row">
           <div class="field">
-            <label>備註（選填）</label>
+            <label for="cmNote">備註（選填）</label>
             <input type="text" id="cmNote" placeholder="例：開技能、有吃藥水等">
           </div>
         </div>
@@ -1271,17 +1280,17 @@ function addMultiRow() {
   div.id = 'mrow-' + id;
   div.innerHTML = `
     <div class="field multi-lv">
-      <label>起始等級</label>
-      <input type="number" placeholder="120" min="1" max="199" oninput="calcMultiRow(${id})">
+      <label for="mfrom-${id}">起始等級</label>
+      <input type="number" id="mfrom-${id}" placeholder="120" min="1" max="199" oninput="calcMultiRow(${id})">
     </div>
     <div class="multi-arr">→</div>
     <div class="field multi-lv">
-      <label>目標等級</label>
-      <input type="number" placeholder="140" min="2" max="200" oninput="calcMultiRow(${id})">
+      <label for="mto-${id}">目標等級</label>
+      <input type="number" id="mto-${id}" placeholder="140" min="2" max="200" oninput="calcMultiRow(${id})">
     </div>
     <div class="field multi-exp-col">
-      <label>EXP / 10分（未加倍）</label>
-      <input type="text" placeholder="例：185W" inputmode="decimal" oninput="calcMultiRow(${id})">
+      <label for="mexp-${id}">EXP / 10分（未加倍）</label>
+      <input type="text" id="mexp-${id}" placeholder="例：185W" inputmode="decimal" oninput="calcMultiRow(${id})">
     </div>
     <div class="multi-res-col">
       <div class="multi-res-label">1x</div>
@@ -1482,6 +1491,9 @@ function timerToggle() {
     document.getElementById('timerStartBtn').textContent = '暫停';
     document.getElementById('timerStartBtn').className = 'timer-btn timer-btn-pause';
     timerInterval = setInterval(timerTick, 1000);
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
   }
 }
 
@@ -1622,10 +1634,6 @@ function applyExpRate() {
   setTimeout(() => { btn.textContent = '↑ 套用到計算機'; }, 2000);
 }
 
-// 請求通知權限
-if ('Notification' in window && Notification.permission === 'default') {
-  Notification.requestPermission();
-}
 
 // === FIREBASE ===
 const firebaseConfig = {
