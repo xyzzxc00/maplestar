@@ -10,11 +10,12 @@ service cloud.firestore {
         request.resource.data.map is string &&
         request.resource.data.map.size() > 0 && request.resource.data.map.size() < 100 &&
         request.resource.data.level is number &&
-        request.resource.data.level > 0 && request.resource.data.level <= 300 &&
+        request.resource.data.level > 0 && request.resource.data.level <= 200 &&
         request.resource.data.exp10 is number &&
         request.resource.data.exp10 > 0 && request.resource.data.exp10 < 1000000000000 &&
         (!('atk' in request.resource.data) || (request.resource.data.atk is number && request.resource.data.atk >= 0)) &&
-        (!('note' in request.resource.data) || (request.resource.data.note is string && request.resource.data.note.size() < 200));
+        (!('note' in request.resource.data) || (request.resource.data.note is string && request.resource.data.note.size() < 200)) &&
+        request.resource.data.ts == request.time;
       allow update, delete: if false;
     }
   }

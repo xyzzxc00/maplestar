@@ -13,6 +13,8 @@
 <meta name="twitter:title" content="⚔ 楓星升等計算器">
 <meta name="twitter:description" content="楓之谷練等經驗計算機，支援皇家騎士團模式、多段練等計算、加倍卷排程與社群經驗資料庫。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e1e1e'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e1e1e'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" id="themeColorMeta" content="#1e1e1e">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
@@ -510,7 +512,9 @@
   body.light .section-label { color: #1e7a44; }
   body.light .section-label .optional { color: #bbb; }
   body.light label { color: #666; }
-  body.light input[type="number"], body.light input[type="text"] { background: #f5f5f5; border-color: #d8d8d8; color: #1a1a1a; }
+  body.light input[type="number"], body.light input[type="text"], body.light select { background: #f5f5f5; border-color: #d8d8d8; color: #1a1a1a; }
+  body.light select option { background: #f5f5f5; color: #1a1a1a; }
+  body.light select option:disabled { color: #bbb; }
   body.light input[type="number"]:focus, body.light input[type="text"]:focus { border-color: #2e8a50; box-shadow: 0 0 0 3px rgba(40,140,80,0.1); }
   body.light input::placeholder { color: #bbb; }
   body.light .arrow { color: #2e8a50; }
@@ -690,13 +694,13 @@
         <button class="share-btn" id="shareBtn" onclick="shareURL()">🔗 <span>複製分享連結</span></button>
       </div>
 
-      <div class="result-total">
+      <div class="result-total" aria-live="polite">
         <div class="r-label">剩餘所需經驗值 <span id="royalBadge" class="royal-tag" style="display:none;border-radius:4px;padding:1px 7px;font-size:0.75rem;margin-left:6px">👑 皇家</span></div>
         <div class="r-value" id="totalExp"><span class="empty">請輸入等級範圍</span></div>
         <div class="r-sub" id="levelRange"></div>
       </div>
 
-      <div class="time-grid">
+      <div class="time-grid" aria-live="polite">
         <div class="time-box">
           <div class="r-label">不加倍 1x</div>
           <div class="r-main" id="timeNo_dhm"><span class="empty">—</span></div>
@@ -954,7 +958,7 @@
           </div>
           <div class="field">
             <label for="cmLevel">角色等級 *</label>
-            <input type="number" id="cmLevel" placeholder="例：135" min="1" max="300">
+            <input type="number" id="cmLevel" placeholder="例：135" min="1" max="200">
           </div>
         </div>
         <div class="cm-form-row">
@@ -1769,17 +1773,26 @@ function switchNav(page) {
 }
 
 // === THEME ===
+function setThemeColorMeta(isLight) {
+  document.getElementById('themeColorMeta').setAttribute('content', isLight ? '#f0f2f0' : '#1e1e1e');
+}
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
   document.getElementById('themeToggle').textContent = isLight ? '🌙 深色' : '☀️ 亮色';
   localStorage.setItem('maplecalc_theme', isLight ? 'light' : 'dark');
+  setThemeColorMeta(isLight);
 }
 
 // === INIT ===
-if (localStorage.getItem('maplecalc_theme') === 'light') {
+const _savedTheme = localStorage.getItem('maplecalc_theme');
+const _wantLight = _savedTheme
+  ? _savedTheme === 'light'
+  : window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+if (_wantLight) {
   document.body.classList.add('light');
   document.getElementById('themeToggle').textContent = '🌙 深色';
 }
+setThemeColorMeta(_wantLight);
 loadFromURL();
 calculate();
 addMultiRow();
