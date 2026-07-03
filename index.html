@@ -155,6 +155,16 @@
   .info-stat .is-value { color: #f0f0f0; font-weight: 600; }
   .info-stat .is-hl { color: #5dca82; font-weight: 700; font-size: 1.05rem; }
 
+  /* Royal mode note/badge */
+  .royal-note { color: #e8a020; background: #2a2200; border: 1px solid #554400; }
+  .royal-tag  { background: #554400; color: #e8a020; }
+  .royal-mode-btn {
+    background: #333; border: 1px solid #484848; border-radius: 6px;
+    color: #888; padding: 4px 12px; cursor: pointer; font-size: 0.8rem;
+    font-weight: 600; transition: all 0.15s; white-space: nowrap;
+  }
+  .royal-mode-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; }
+
   /* Share button */
   .share-btn {
     background: #2e3d32; border: 1px solid rgba(80,200,120,0.4);
@@ -519,6 +529,10 @@
   body.light .info-stat .is-hl { color: #1a7a40; }
   body.light .share-btn { background: #eaf5ef; border-color: rgba(40,140,80,0.4); color: #1a7a40; }
   body.light .share-btn:hover { background: #d8eede; }
+  body.light .royal-note { color: #1a7a40; background: #eaf5ef; border-color: rgba(40,140,80,0.35); }
+  body.light .royal-tag  { background: #dff0e6; color: #1a7a40; }
+  body.light .royal-mode-btn { background: #f0f0f0; border-color: #d8d8d8; color: #555; }
+  body.light .royal-mode-btn.active { background: #2e7d4a; border-color: #3aaa66; color: #fff; }
   body.light .multi-res-val { background: #f0f0f0; color: #1a1a1a; }
   body.light .multi-res-val.hl { background: #dff0e6; color: #1a7a40; }
   body.light .multi-total-box { background: #f0f0f0; border-color: rgba(40,140,80,0.2); }
@@ -574,7 +588,7 @@
       <div class="section">
         <div class="section-label" style="display:flex;justify-content:space-between;align-items:center">
           等級範圍
-          <button id="royalModeBtn" onclick="toggleRoyalMode()" style="background:#333;border:1px solid #484848;border-radius:6px;color:#888;padding:4px 12px;cursor:pointer;font-size:0.8rem;font-weight:600;transition:all 0.15s;white-space:nowrap">👑 皇家騎士團</button>
+          <button id="royalModeBtn" class="royal-mode-btn" onclick="toggleRoyalMode()">👑 皇家騎士團</button>
         </div>
         <div class="row">
           <div class="field">
@@ -587,7 +601,7 @@
             <input type="number" id="toLevel" placeholder="例：135" min="2" max="200">
           </div>
         </div>
-        <div id="royalModeNote" style="display:none;margin-top:8px;font-size:0.82rem;color:#e8a020;background:#2a2200;border:1px solid #554400;border-radius:6px;padding:7px 12px">
+        <div id="royalModeNote" class="royal-note" style="display:none;margin-top:8px;font-size:0.82rem;border-radius:6px;padding:7px 12px">
           👑 皇家騎士團模式：每升等後自動獲得下一等 10% EXP，各等級所需時間已自動扣除｜上限 120 等
         </div>
       </div>
@@ -668,7 +682,7 @@
       </div>
 
       <div class="result-total">
-        <div class="r-label">剩餘所需經驗值 <span id="royalBadge" style="display:none;background:#554400;color:#e8a020;border-radius:4px;padding:1px 7px;font-size:0.75rem;margin-left:6px">👑 皇家</span></div>
+        <div class="r-label">剩餘所需經驗值 <span id="royalBadge" class="royal-tag" style="display:none;border-radius:4px;padding:1px 7px;font-size:0.75rem;margin-left:6px">👑 皇家</span></div>
         <div class="r-value" id="totalExp"><span class="empty">請輸入等級範圍</span></div>
         <div class="r-sub" id="levelRange"></div>
       </div>
@@ -741,7 +755,7 @@
     <div class="card-title">
       多段練等計算
       <div style="display:flex;gap:8px;align-items:center">
-        <span id="multiRoyalNote" style="display:none;background:#554400;color:#e8a020;border-radius:4px;padding:2px 10px;font-size:0.78rem;font-weight:600">👑 皇家模式 上限120等 各等-10%</span>
+        <span id="multiRoyalNote" class="royal-tag" style="display:none;border-radius:4px;padding:2px 10px;font-size:0.78rem;font-weight:600">👑 皇家模式 上限120等 各等-10%</span>
         <button class="multi-add-btn" onclick="addMultiRow()">＋ 新增一段</button>
       </div>
     </div>
@@ -1005,9 +1019,7 @@ function toggleRoyalMode() {
   const note   = document.getElementById('royalModeNote');
   const badge  = document.getElementById('royalBadge');
   const toLvEl = document.getElementById('toLevel');
-  btn.style.background    = royalMode ? '#554400' : '#333';
-  btn.style.borderColor   = royalMode ? '#aa8800' : '#484848';
-  btn.style.color         = royalMode ? '#e8a020' : '#888';
+  btn.classList.toggle('active', royalMode);
   note.style.display      = royalMode ? '' : 'none';
   badge.style.display     = royalMode ? '' : 'none';
   toLvEl.max              = royalMode ? 120 : 200;
