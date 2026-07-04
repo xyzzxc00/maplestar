@@ -148,7 +148,7 @@
     padding: 8px 0; border-bottom: 1px solid #2e2e2e; font-size: 0.95rem;
   }
   .stat-row:last-child { border-bottom: none; }
-  .stat-label { color: #777; }
+  .stat-label { color: #8a8a8a; }
   .stat-value { color: #f0f0f0; font-weight: 600; }
 
   /* coupon box */
@@ -282,8 +282,8 @@
   .exp-rate-hint { color: #555; font-size: 0.85rem; }
 
 
-  .note { font-size: 0.78rem; color: #444; text-align: center; margin-top: 10px; }
-  .empty { color: #444; font-size: 1rem; }
+  .note { font-size: 0.78rem; color: #8c8c8c; text-align: center; margin-top: 10px; }
+  .empty { color: #8c8c8c; font-size: 1rem; }
 
   /* Multi-level calc */
   .multi-row {
@@ -326,7 +326,7 @@
   /* ── Mobile ── */
   @media (max-width: 760px) {
     body { padding: 14px 12px; gap: 12px; }
-    h1 { font-size: 1.5rem; }
+    h1 { font-size: 1.4rem; padding-right: 70px; }
     .layout { flex-direction: column; gap: 12px; }
     .card { padding: 20px 16px; width: 100%; }
     .full-card { padding: 20px 16px; }
@@ -468,9 +468,9 @@
   .cm-stat span:last-child  { color: #f0f0f0; font-weight: 600; }
   .cm-note { font-size: 0.8rem; color: #666; font-style: italic; border-top: 1px solid #3a3a3a; padding-top: 6px; }
   .cm-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-  .cm-ts { font-size: 0.75rem; color: #555; }
-  .cm-empty { color: #555; text-align: center; padding: 32px 0; font-size: 0.95rem; }
-  .cm-loading { color: #555; text-align: center; padding: 32px 0; font-size: 0.95rem; }
+  .cm-ts { font-size: 0.75rem; color: #9a9a9a; }
+  .cm-empty { color: #9a9a9a; text-align: center; padding: 32px 0; font-size: 0.95rem; }
+  .cm-loading { color: #9a9a9a; text-align: center; padding: 32px 0; font-size: 0.95rem; }
 
   /* Light mode - community */
   body.light .cm-filter-input { background: #f5f5f5; border-color: #d8d8d8; color: #1a1a1a; }
@@ -482,8 +482,8 @@
   body.light .cm-stat span:first-child { color: #888; }
   body.light .cm-stat span:last-child  { color: #1a1a1a; }
   body.light .cm-note { color: #999; border-top-color: #e0e0e0; }
-  body.light .cm-ts { color: #bbb; }
-  body.light .cm-empty, body.light .cm-loading { color: #bbb; }
+  body.light .cm-ts { color: #707070; }
+  body.light .cm-empty, body.light .cm-loading { color: #707070; }
 
   @media (max-width: 900px) { .cm-grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 560px) {
@@ -533,7 +533,7 @@
   body.light .time-box .r-sub { color: #aaa; }
   body.light .divider { border-top-color: #e8e8e8; }
   body.light .stat-row { border-bottom-color: #eeeeee; }
-  body.light .stat-label { color: #888; }
+  body.light .stat-label { color: #707070; }
   body.light .stat-value { color: #1a1a1a; }
   body.light .info-box { background: #eaf5ef; border-color: rgba(40,140,80,0.3); }
   body.light .info-stat { border-bottom-color: #d4e8db; }
@@ -556,8 +556,8 @@
   body.light .multi-del:hover { color: #cc4444; }
   body.light .multi-add-btn { background: #eaf5ef; border-color: rgba(40,140,80,0.3); color: #1a7a40; }
   body.light .multi-add-btn:hover { background: #d8eede; }
-  body.light .note { color: #bbb; }
-  body.light .empty { color: #bbb; }
+  body.light .note { color: #707070; }
+  body.light .empty { color: #707070; }
   body.light .timer-ring-bg { stroke: #e0e0e0; }
   body.light .timer-time { color: #1a1a1a; }
   body.light .timer-label { color: #999; }
@@ -980,12 +980,12 @@
         <div class="cm-form-actions">
           <button class="cm-submit-btn" onclick="submitCmRecord()">送出</button>
           <button class="cm-cancel-btn" onclick="toggleCmForm()">取消</button>
-          <span class="cm-msg" id="cmMsg"></span>
+          <span class="cm-msg" id="cmMsg" aria-live="polite"></span>
         </div>
       </div>
     </div>
 
-    <div id="cmList"><div class="cm-loading">載入中...</div></div>
+    <div id="cmList" aria-live="polite"><div class="cm-loading">載入中...</div></div>
   </div>
 
   </div><!-- /pageCm -->
